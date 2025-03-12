@@ -1,0 +1,4 @@
+MainPrgm L3_h;
+Var
+let a,b : Int = 223;
+let c : [Int ; 10] = {1,21,2} ;

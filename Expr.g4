@@ -30,13 +30,6 @@ grammar Expr;
  }
 }
 
-//Production Rules
-prog:	(expr NEWLINE)* ;
-expr:	expr ('*'|'/') expr
-    |	expr ('+'|'-') expr
-    |	INT
-    |	'(' expr ')'
-    ;
 
 //Fragements
 fragment LETTER: [a-zA-Z];
@@ -48,6 +41,7 @@ fragment ARITHMETICOPERATOR: [+/*\-];
 fragment COMPARAISONOPERATOR:  '<'|'>'|'>='|'<='|'=='|'!=';
 
 //Tokens
+TYPE: 'Int' | 'Float' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 MAIN: 'MainPrgm' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 VAR: 'Var' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 BEGIN: 'BeginPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
@@ -77,3 +71,16 @@ Separators: '('|')'|'='|';'|'{'|'}'|'['|']'|':'|','|ARITHMETICOPERATOR|COMPARAIS
 COMMENT: MULTILINECOMMENT|INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());};
 WS : [ \t\r\n]+ -> skip;
 ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);};
+
+//Production Rules
+prog:	MAIN IDF ';'  varBlock EOF;
+varBlock: VAR declaration+;
+declaration:  normalDeclaration |  arrayDeclaration;
+listIDF: IDF(','IDF)*;
+normalDeclaration:  declarationKeyword listIDF ':' TYPE affectValue ';' | declarationKeyword listIDF ':' TYPE ';';
+number : INT | FLOAT;
+affectValue: '=' number ;
+arrayDeclaration: declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';' | declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' ;
+affectArray:  '=' '{' listNumber '}';
+declarationKeyword : DEFINE CONST | LET;
+listNumber : number (',' number)*;
