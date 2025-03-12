@@ -1,0 +1,22 @@
+MainPrgm L3_jjjjjjjh
+ 
+Var
+<!-Partie declaration-!>
+ 
+BegiPg
+{
+ {-- Partie Instruction 
+  mulit line--}
+  Ouput("hello world im dying");
+  Float nb = (-3.14);
+ 
+ #
+
+  Float n1 = .21;
+  Float n2 = 21.;
+  Int c = 021;
+  Int a = 3324032;
+  Int b = -33322002;
+  
+}
+EndPg ;
