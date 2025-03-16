@@ -1,0 +1,245 @@
+2025-03-15 21:51:20:736 grammar LogManager.java:25 before: (COMBINED_GRAMMAR Expr (@ lexer members {
+ public void printToken(String token , String type, int line , int column) {
+    //column = column - token.length() + 1;
+    System.out.println("Matched "+type+": "+token+" at line " + line + ", column " + column);
+ }
+
+  public void validateIntToken(String token , int min ,int max, int line , int column){
+    //int column_1 = column - token.length() + 1;
+    int value = Integer.parseInt(token);
+  if(value<min || value >max){
+ System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Int Constant",line,column);
+  }
+ }
+
+ public void validateIDFToken(String token , int maxLength , int line , int column){
+    column = column - token.length() + 1;
+  if(token.length()>14){
+ System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Identifier",line,column);
+  }
+ }
+}) (RULES (RULE LETTER (RULEMODIFIERS fragment) (BLOCK (ALT [a-zA-Z]))) (RULE DIGIT (RULEMODIFIERS fragment) (BLOCK (ALT [0-9]))) (RULE ALPHANUMERICAL (RULEMODIFIERS fragment) (BLOCK (ALT LETTER) (ALT DIGIT))) (RULE INLINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '<!-' (* (BLOCK (ALT (~ (SET [\n]))))) '-!>'))) (RULE MULTILINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '{--' (* (BLOCK (ALT .))) '--}'))) (RULE ARITHMETICOPERATOR (RULEMODIFIERS fragment) (BLOCK (ALT [+/*\-]))) (RULE COMPARAISONOPERATOR (RULEMODIFIERS fragment) (BLOCK (ALT '<') (ALT '>') (ALT '>=') (ALT '<=') (ALT '==') (ALT '!='))) (RULE INPUT (BLOCK (ALT 'input'))) (RULE OUTPUT (BLOCK (ALT 'output'))) (RULE TYPE (BLOCK (ALT 'Int') (ALT 'Float' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE MAIN (BLOCK (ALT 'MainPrgm' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE VAR (BLOCK (ALT 'Var' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE BEGIN (BLOCK (ALT 'BeginPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE END (BLOCK (ALT 'EndPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE IF (BLOCK (ALT 'if' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE ELSE (BLOCK (ALT 'else' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE THEN (BLOCK (ALT 'then' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE WHILE (BLOCK (ALT 'while' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE DO (BLOCK (ALT 'do' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE FOR (BLOCK (ALT 'for' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE FROM (BLOCK (ALT 'from' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE TO (BLOCK (ALT 'to' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE STEP (BLOCK (ALT 'step' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE AND (BLOCK (ALT 'AND' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE OR (BLOCK (ALT 'OR' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE LET (BLOCK (ALT 'let' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE DEFINE (BLOCK (ALT '@Define' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE CONST (BLOCK (ALT 'const' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE IDF (BLOCK (ALT (+ (BLOCK (ALT LETTER))) (* (BLOCK (ALT (+ (BLOCK (ALT ALPHANUMERICAL))) (* (BLOCK (ALT '_' (+ (BLOCK (ALT ALPHANUMERICAL))))))))) {validateIDFToken(getText(), 14,getLine(), getCharPositionInLine());}))) (RULE INT (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) {validateIntToken(getText(), -32768,32767,getLine(), getCharPositionInLine());}))) (RULE FLOAT (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) '.' (+ (BLOCK (ALT DIGIT)))) (ALT '.' (+ (BLOCK (ALT DIGIT)))) (ALT (+ (BLOCK (ALT DIGIT))) '.' {printToken(getText(),"Float Constant",getLine(),getCharPositionInLine());}))) (RULE STRING (BLOCK (ALT '"' (* (BLOCK (ALT (~ (SET ["\n]))))) '"' {printToken(getText(),"String Constant",getLine(),getCharPositionInLine());}))) (RULE AFFECT (BLOCK (ALT ':='))) (RULE Separators (BLOCK (ALT '(') (ALT ')') (ALT '=') (ALT ';') (ALT '{') (ALT '}') (ALT '[') (ALT ']') (ALT ':') (ALT ',') (ALT ARITHMETICOPERATOR) (ALT COMPARAISONOPERATOR) (ALT '!' {printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COMMENT (BLOCK (ALT MULTILINECOMMENT) (ALT INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());}))) (RULE WS (BLOCK (LEXER_ALT_ACTION (ALT (+ (BLOCK (ALT [ \t\r\n])))) skip))) (RULE ERROR_TOKEN (BLOCK (ALT . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);}))) (RULE prog (BLOCK (ALT (* (BLOCK (ALT COMMENT))) MAIN IDF ';' (* (BLOCK (ALT COMMENT))) varBlock (* (BLOCK (ALT COMMENT))) mainCode (* (BLOCK (ALT COMMENT))) EOF))) (RULE varBlock (BLOCK (ALT VAR (+ (BLOCK (ALT declaration)))) (ALT VAR))) (RULE declaration (BLOCK (ALT normalDeclaration) (ALT arrayDeclaration) (ALT COMMENT))) (RULE listIDF (BLOCK (ALT IDF (* (BLOCK (ALT ',' IDF)))))) (RULE normalDeclaration (BLOCK (ALT declarationKeyword listIDF ':' TYPE affectValue ';') (ALT declarationKeyword listIDF ':' TYPE ';'))) (RULE sign (BLOCK (ALT '+') (ALT '-'))) (RULE affectValue (BLOCK (ALT '=' number))) (RULE number (BLOCK (ALT '(' sign INT ')') (ALT '(' sign FLOAT ')') (ALT INT) (ALT FLOAT))) (RULE arrayDeclaration (BLOCK (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';') (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';'))) (RULE affectArray (BLOCK (ALT '=' '{' listNumber '}'))) (RULE declarationKeyword (BLOCK (ALT DEFINE CONST) (ALT LET))) (RULE listNumber (BLOCK (ALT number (* (BLOCK (ALT ',' number)))))) (RULE mainCode (BLOCK (ALT BEGIN (* (BLOCK (ALT COMMENT))) '{' (+ (BLOCK (ALT inst))) '}' (* (BLOCK (ALT COMMENT))) END ';') (ALT BEGIN (* (BLOCK (ALT COMMENT))) '{' '}' (* (BLOCK (ALT COMMENT))) END ';'))) (RULE inst (BLOCK (ALT output) (ALT input) (ALT affectInst) (ALT COMMENT))) (RULE input (BLOCK (ALT INPUT '(' listIDF ')' ';'))) (RULE output (BLOCK (ALT OUTPUT '(' content ')' ';'))) (RULE content (BLOCK (ALT (+ (BLOCK (ALT (BLOCK (ALT STRING) (ALT IDF)) ','))) (BLOCK (ALT STRING) (ALT IDF))) (ALT (BLOCK (ALT STRING) (ALT IDF))))) (RULE affectInst (BLOCK (ALT var AFFECT arithmeticExpression ';'))) (RULE arithmeticExpression (BLOCK (ALT operator operation arithmeticExpression) (ALT '(' arithmeticExpression ')') (ALT operator))) (RULE operator (BLOCK (ALT number) (ALT IDF))) (RULE var (BLOCK (ALT IDF) (ALT IDF '[' INT ']'))) (RULE operation (BLOCK (ALT '+') (ALT '-') (ALT '*') (ALT '\\')))))
+2025-03-15 21:51:20:771 grammar LogManager.java:25 after: (COMBINED_GRAMMAR Expr (@ lexer members {
+ public void printToken(String token , String type, int line , int column) {
+    //column = column - token.length() + 1;
+    System.out.println("Matched "+type+": "+token+" at line " + line + ", column " + column);
+ }
+
+  public void validateIntToken(String token , int min ,int max, int line , int column){
+    //int column_1 = column - token.length() + 1;
+    int value = Integer.parseInt(token);
+  if(value<min || value >max){
+ System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Int Constant",line,column);
+  }
+ }
+
+ public void validateIDFToken(String token , int maxLength , int line , int column){
+    column = column - token.length() + 1;
+  if(token.length()>14){
+ System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Identifier",line,column);
+  }
+ }
+}) (RULES (RULE LETTER (RULEMODIFIERS fragment) (BLOCK (ALT [a-zA-Z]))) (RULE DIGIT (RULEMODIFIERS fragment) (BLOCK (ALT [0-9]))) (RULE ALPHANUMERICAL (RULEMODIFIERS fragment) (BLOCK (ALT LETTER) (ALT DIGIT))) (RULE INLINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '<!-' (* (BLOCK (ALT (~ (SET [\n]))))) '-!>'))) (RULE MULTILINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '{--' (* (BLOCK (ALT .))) '--}'))) (RULE ARITHMETICOPERATOR (RULEMODIFIERS fragment) (BLOCK (ALT [+/*\-]))) (RULE COMPARAISONOPERATOR (RULEMODIFIERS fragment) (BLOCK (ALT '<') (ALT '>') (ALT '>=') (ALT '<=') (ALT '==') (ALT '!='))) (RULE INPUT (BLOCK (ALT 'input'))) (RULE OUTPUT (BLOCK (ALT 'output'))) (RULE TYPE (BLOCK (ALT 'Int') (ALT 'Float' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE MAIN (BLOCK (ALT 'MainPrgm' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE VAR (BLOCK (ALT 'Var' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE BEGIN (BLOCK (ALT 'BeginPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE END (BLOCK (ALT 'EndPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE IF (BLOCK (ALT 'if' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE ELSE (BLOCK (ALT 'else' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE THEN (BLOCK (ALT 'then' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE WHILE (BLOCK (ALT 'while' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE DO (BLOCK (ALT 'do' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE FOR (BLOCK (ALT 'for' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE FROM (BLOCK (ALT 'from' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE TO (BLOCK (ALT 'to' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE STEP (BLOCK (ALT 'step' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE AND (BLOCK (ALT 'AND' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE OR (BLOCK (ALT 'OR' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE LET (BLOCK (ALT 'let' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE DEFINE (BLOCK (ALT '@Define' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE CONST (BLOCK (ALT 'const' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE IDF (BLOCK (ALT (+ (BLOCK (ALT LETTER))) (* (BLOCK (ALT (+ (BLOCK (ALT ALPHANUMERICAL))) (* (BLOCK (ALT '_' (+ (BLOCK (ALT ALPHANUMERICAL))))))))) {validateIDFToken(getText(), 14,getLine(), getCharPositionInLine());}))) (RULE INT (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) {validateIntToken(getText(), -32768,32767,getLine(), getCharPositionInLine());}))) (RULE FLOAT (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) '.' (+ (BLOCK (ALT DIGIT)))) (ALT '.' (+ (BLOCK (ALT DIGIT)))) (ALT (+ (BLOCK (ALT DIGIT))) '.' {printToken(getText(),"Float Constant",getLine(),getCharPositionInLine());}))) (RULE STRING (BLOCK (ALT '"' (* (BLOCK (ALT (~ (SET ["\n]))))) '"' {printToken(getText(),"String Constant",getLine(),getCharPositionInLine());}))) (RULE AFFECT (BLOCK (ALT ':='))) (RULE Separators (BLOCK (ALT '(') (ALT ')') (ALT '=') (ALT ';') (ALT '{') (ALT '}') (ALT '[') (ALT ']') (ALT ':') (ALT ',') (ALT ARITHMETICOPERATOR) (ALT COMPARAISONOPERATOR) (ALT '!' {printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COMMENT (BLOCK (ALT MULTILINECOMMENT) (ALT INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());}))) (RULE WS (BLOCK (LEXER_ALT_ACTION (ALT (+ (BLOCK (ALT [ \t\r\n])))) skip))) (RULE ERROR_TOKEN (BLOCK (ALT . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);}))) (RULE prog (BLOCK (ALT (* (BLOCK (ALT COMMENT))) MAIN IDF ';' (* (BLOCK (ALT COMMENT))) varBlock (* (BLOCK (ALT COMMENT))) mainCode (* (BLOCK (ALT COMMENT))) EOF))) (RULE varBlock (BLOCK (ALT VAR (+ (BLOCK (ALT declaration)))) (ALT VAR))) (RULE declaration (BLOCK (ALT normalDeclaration) (ALT arrayDeclaration) (ALT COMMENT))) (RULE listIDF (BLOCK (ALT IDF (* (BLOCK (ALT ',' IDF)))))) (RULE normalDeclaration (BLOCK (ALT declarationKeyword listIDF ':' TYPE affectValue ';') (ALT declarationKeyword listIDF ':' TYPE ';'))) (RULE sign (BLOCK (ALT (SET '+' '-')))) (RULE affectValue (BLOCK (ALT '=' number))) (RULE number (BLOCK (ALT '(' sign INT ')') (ALT '(' sign FLOAT ')') (ALT INT) (ALT FLOAT))) (RULE arrayDeclaration (BLOCK (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';') (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';'))) (RULE affectArray (BLOCK (ALT '=' '{' listNumber '}'))) (RULE declarationKeyword (BLOCK (ALT DEFINE CONST) (ALT LET))) (RULE listNumber (BLOCK (ALT number (* (BLOCK (ALT ',' number)))))) (RULE mainCode (BLOCK (ALT BEGIN (* (BLOCK (ALT COMMENT))) '{' (+ (BLOCK (ALT inst))) '}' (* (BLOCK (ALT COMMENT))) END ';') (ALT BEGIN (* (BLOCK (ALT COMMENT))) '{' '}' (* (BLOCK (ALT COMMENT))) END ';'))) (RULE inst (BLOCK (ALT output) (ALT input) (ALT affectInst) (ALT COMMENT))) (RULE input (BLOCK (ALT INPUT '(' listIDF ')' ';'))) (RULE output (BLOCK (ALT OUTPUT '(' content ')' ';'))) (RULE content (BLOCK (ALT (+ (BLOCK (ALT (SET STRING IDF) ','))) (SET STRING IDF)) (ALT (SET STRING IDF)))) (RULE affectInst (BLOCK (ALT var AFFECT arithmeticExpression ';'))) (RULE arithmeticExpression (BLOCK (ALT operator operation arithmeticExpression) (ALT '(' arithmeticExpression ')') (ALT operator))) (RULE operator (BLOCK (ALT number) (ALT IDF))) (RULE var (BLOCK (ALT IDF) (ALT IDF '[' INT ']'))) (RULE operation (BLOCK (ALT (SET '+' '-' '*' '\\'))))))
+2025-03-15 21:51:20:803 grammar LogManager.java:25 after extract implicit lexer =(COMBINED_GRAMMAR Expr (RULES (RULE prog (BLOCK (ALT (* (BLOCK (ALT COMMENT))) MAIN IDF ';' (* (BLOCK (ALT COMMENT))) varBlock (* (BLOCK (ALT COMMENT))) mainCode (* (BLOCK (ALT COMMENT))) EOF))) (RULE varBlock (BLOCK (ALT VAR (+ (BLOCK (ALT declaration)))) (ALT VAR))) (RULE declaration (BLOCK (ALT normalDeclaration) (ALT arrayDeclaration) (ALT COMMENT))) (RULE listIDF (BLOCK (ALT IDF (* (BLOCK (ALT ',' IDF)))))) (RULE normalDeclaration (BLOCK (ALT declarationKeyword listIDF ':' TYPE affectValue ';') (ALT declarationKeyword listIDF ':' TYPE ';'))) (RULE sign (BLOCK (ALT (SET '+' '-')))) (RULE affectValue (BLOCK (ALT '=' number))) (RULE number (BLOCK (ALT '(' sign INT ')') (ALT '(' sign FLOAT ')') (ALT INT) (ALT FLOAT))) (RULE arrayDeclaration (BLOCK (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';') (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';'))) (RULE affectArray (BLOCK (ALT '=' '{' listNumber '}'))) (RULE declarationKeyword (BLOCK (ALT DEFINE CONST) (ALT LET))) (RULE listNumber (BLOCK (ALT number (* (BLOCK (ALT ',' number)))))) (RULE mainCode (BLOCK (ALT BEGIN (* (BLOCK (ALT COMMENT))) '{' (+ (BLOCK (ALT inst))) '}' (* (BLOCK (ALT COMMENT))) END ';') (ALT BEGIN (* (BLOCK (ALT COMMENT))) '{' '}' (* (BLOCK (ALT COMMENT))) END ';'))) (RULE inst (BLOCK (ALT output) (ALT input) (ALT affectInst) (ALT COMMENT))) (RULE input (BLOCK (ALT INPUT '(' listIDF ')' ';'))) (RULE output (BLOCK (ALT OUTPUT '(' content ')' ';'))) (RULE content (BLOCK (ALT (+ (BLOCK (ALT (SET STRING IDF) ','))) (SET STRING IDF)) (ALT (SET STRING IDF)))) (RULE affectInst (BLOCK (ALT var AFFECT arithmeticExpression ';'))) (RULE arithmeticExpression (BLOCK (ALT operator operation arithmeticExpression) (ALT '(' arithmeticExpression ')') (ALT operator))) (RULE operator (BLOCK (ALT number) (ALT IDF))) (RULE var (BLOCK (ALT IDF) (ALT IDF '[' INT ']'))) (RULE operation (BLOCK (ALT (SET '+' '-' '*' '\\'))))))
+2025-03-15 21:51:20:803 grammar LogManager.java:25 lexer =(LEXER_GRAMMAR ExprLexer (@ lexer members {
+ public void printToken(String token , String type, int line , int column) {
+    //column = column - token.length() + 1;
+    System.out.println("Matched "+type+": "+token+" at line " + line + ", column " + column);
+ }
+
+  public void validateIntToken(String token , int min ,int max, int line , int column){
+    //int column_1 = column - token.length() + 1;
+    int value = Integer.parseInt(token);
+  if(value<min || value >max){
+ System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Int Constant",line,column);
+  }
+ }
+
+ public void validateIDFToken(String token , int maxLength , int line , int column){
+    column = column - token.length() + 1;
+  if(token.length()>14){
+ System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Identifier",line,column);
+  }
+ }
+}) (RULES (RULE T__0 (BLOCK (ALT ';'))) (RULE T__1 (BLOCK (ALT ','))) (RULE T__2 (BLOCK (ALT ':'))) (RULE T__3 (BLOCK (ALT '+'))) (RULE T__4 (BLOCK (ALT '-'))) (RULE T__5 (BLOCK (ALT '='))) (RULE T__6 (BLOCK (ALT '('))) (RULE T__7 (BLOCK (ALT ')'))) (RULE T__8 (BLOCK (ALT '['))) (RULE T__9 (BLOCK (ALT ']'))) (RULE T__10 (BLOCK (ALT '{'))) (RULE T__11 (BLOCK (ALT '}'))) (RULE T__12 (BLOCK (ALT '*'))) (RULE T__13 (BLOCK (ALT '\\'))) (RULE LETTER (RULEMODIFIERS fragment) (BLOCK (ALT [a-zA-Z]))) (RULE DIGIT (RULEMODIFIERS fragment) (BLOCK (ALT [0-9]))) (RULE ALPHANUMERICAL (RULEMODIFIERS fragment) (BLOCK (ALT LETTER) (ALT DIGIT))) (RULE INLINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '<!-' (* (BLOCK (ALT (~ (SET [\n]))))) '-!>'))) (RULE MULTILINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '{--' (* (BLOCK (ALT .))) '--}'))) (RULE ARITHMETICOPERATOR (RULEMODIFIERS fragment) (BLOCK (ALT [+/*\-]))) (RULE COMPARAISONOPERATOR (RULEMODIFIERS fragment) (BLOCK (ALT '<') (ALT '>') (ALT '>=') (ALT '<=') (ALT '==') (ALT '!='))) (RULE INPUT (BLOCK (ALT 'input'))) (RULE OUTPUT (BLOCK (ALT 'output'))) (RULE TYPE (BLOCK (ALT 'Int') (ALT 'Float' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE MAIN (BLOCK (ALT 'MainPrgm' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE VAR (BLOCK (ALT 'Var' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE BEGIN (BLOCK (ALT 'BeginPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE END (BLOCK (ALT 'EndPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE IF (BLOCK (ALT 'if' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE ELSE (BLOCK (ALT 'else' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE THEN (BLOCK (ALT 'then' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE WHILE (BLOCK (ALT 'while' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE DO (BLOCK (ALT 'do' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE FOR (BLOCK (ALT 'for' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE FROM (BLOCK (ALT 'from' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE TO (BLOCK (ALT 'to' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE STEP (BLOCK (ALT 'step' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE AND (BLOCK (ALT 'AND' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE OR (BLOCK (ALT 'OR' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE LET (BLOCK (ALT 'let' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE DEFINE (BLOCK (ALT '@Define' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE CONST (BLOCK (ALT 'const' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());}))) (RULE IDF (BLOCK (ALT (+ (BLOCK (ALT LETTER))) (* (BLOCK (ALT (+ (BLOCK (ALT ALPHANUMERICAL))) (* (BLOCK (ALT '_' (+ (BLOCK (ALT ALPHANUMERICAL))))))))) {validateIDFToken(getText(), 14,getLine(), getCharPositionInLine());}))) (RULE INT (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) {validateIntToken(getText(), -32768,32767,getLine(), getCharPositionInLine());}))) (RULE FLOAT (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) '.' (+ (BLOCK (ALT DIGIT)))) (ALT '.' (+ (BLOCK (ALT DIGIT)))) (ALT (+ (BLOCK (ALT DIGIT))) '.' {printToken(getText(),"Float Constant",getLine(),getCharPositionInLine());}))) (RULE STRING (BLOCK (ALT '"' (* (BLOCK (ALT (~ (SET ["\n]))))) '"' {printToken(getText(),"String Constant",getLine(),getCharPositionInLine());}))) (RULE AFFECT (BLOCK (ALT ':='))) (RULE Separators (BLOCK (ALT '(') (ALT ')') (ALT '=') (ALT ';') (ALT '{') (ALT '}') (ALT '[') (ALT ']') (ALT ':') (ALT ',') (ALT ARITHMETICOPERATOR) (ALT COMPARAISONOPERATOR) (ALT '!' {printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COMMENT (BLOCK (ALT MULTILINECOMMENT) (ALT INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());}))) (RULE WS (BLOCK (LEXER_ALT_ACTION (ALT (+ (BLOCK (ALT [ \t\r\n])))) skip))) (RULE ERROR_TOKEN (BLOCK (ALT . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);})))))
+2025-03-15 21:51:21:007 action-translator LogManager.java:25 translate 
+ public void printToken(String token , String type, int line , int column) {
+    //column = column - token.length() + 1;
+    System.out.println("Matched "+type+": "+token+" at line " + line + ", column " + column);
+ }
+
+  public void validateIntToken(String token , int min ,int max, int line , int column){
+    //int column_1 = column - token.length() + 1;
+    int value = Integer.parseInt(token);
+  if(value<min || value >max){
+ System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Int Constant",line,column);
+  }
+ }
+
+ public void validateIDFToken(String token , int maxLength , int line , int column){
+    column = column - token.length() + 1;
+  if(token.length()>14){
+ System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
+            System.exit(1);
+  }
+  else {
+    printToken(token,"Identifier",line,column);
+  }
+ }
+
+2025-03-15 21:51:21:031 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:031 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:031 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:032 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"Keyword",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate validateIDFToken(getText(), 14,getLine(), getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate validateIntToken(getText(), -32768,32767,getLine(), getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"Float Constant",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"String Constant",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate printToken(getText(),"Comment",getLine(),getCharPositionInLine());
+2025-03-15 21:51:21:033 action-translator LogManager.java:25 translate System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);
+2025-03-15 21:51:21:117 semantics LogManager.java:25 tokens={EOF=-1, T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, INPUT=15, OUTPUT=16, TYPE=17, MAIN=18, VAR=19, BEGIN=20, END=21, IF=22, ELSE=23, THEN=24, WHILE=25, DO=26, FOR=27, FROM=28, TO=29, STEP=30, AND=31, OR=32, LET=33, DEFINE=34, CONST=35, IDF=36, INT=37, FLOAT=38, STRING=39, AFFECT=40, Separators=41, COMMENT=42, WS=43, ERROR_TOKEN=44}
+2025-03-15 21:51:21:117 semantics LogManager.java:25 strings={';'=1, ','=2, ':'=3, '+'=4, '-'=5, '='=6, '('=7, ')'=8, '['=9, ']'=10, '{'=11, '}'=12, '*'=13, '\\'=14, 'input'=15, 'output'=16, 'MainPrgm'=18, 'Var'=19, 'BeginPg'=20, 'EndPg'=21, 'if'=22, 'else'=23, 'then'=24, 'while'=25, 'do'=26, 'for'=27, 'from'=28, 'to'=29, 'step'=30, 'AND'=31, 'OR'=32, 'let'=33, '@Define'=34, 'const'=35, ':='=40}
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 
+DECISION 0 in rule prog
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 look=[42, 18]
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 
+DECISION 1 in rule prog
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 look=[42, 19]
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 
+DECISION 2 in rule prog
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 look=[42, 20]
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 
+DECISION 3 in rule prog
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 look=[42, <EOF>]
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:126 LL1 LogManager.java:25 
+DECISION 4 in rule varBlock
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[{33..34, 42}, {20, 42}]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 5 in rule varBlock
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[19, 19]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 6 in rule declaration
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[{33..34}, {33..34}, 42]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 7 in rule listIDF
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[2, {3, 8}]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 8 in rule normalDeclaration
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[{33..34}, {33..34}]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 9 in rule number
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[7, 7, 37, 38]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 10 in rule arrayDeclaration
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[{33..34}, {33..34}]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 11 in rule declarationKeyword
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[34, 33]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 12 in rule listNumber
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 look=[2, 12]
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:127 LL1 LogManager.java:25 
+DECISION 13 in rule mainCode
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[42, 11]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 14 in rule mainCode
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[{15..16, 36, 42}, 12]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 15 in rule mainCode
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[42, 21]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 16 in rule mainCode
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[42, 11]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 17 in rule mainCode
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[42, 21]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 18 in rule mainCode
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[20, 20]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 19 in rule inst
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[16, 15, 36, 42]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 20 in rule content
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[{36, 39}, {36, 39}]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 21 in rule content
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[{36, 39}, {36, 39}]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 22 in rule arithmeticExpression
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[{7, 36..38}, 7, {7, 36..38}]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? false
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 23 in rule operator
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 look=[{7, 37..38}, 36]
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 LL(1)? true
+2025-03-15 21:51:21:128 LL1 LogManager.java:25 
+DECISION 24 in rule var
+2025-03-15 21:51:21:129 LL1 LogManager.java:25 look=[36, 36]
+2025-03-15 21:51:21:129 LL1 LogManager.java:25 LL(1)? false

@@ -1,4 +1,4 @@
-grammar Expr;		
+grammar Expr;
 
 @lexer::members {
  public void printToken(String token , String type, int line , int column) {
@@ -35,12 +35,14 @@ grammar Expr;
 fragment LETTER: [a-zA-Z];
 fragment DIGIT: [0-9];
 fragment ALPHANUMERICAL: LETTER | DIGIT;
-fragment INLINECOMMENT: '<!-' ~[\n]* '-!>';
+fragment INLINECOMMENT: '<!-' ~[\n]* '-!>'; 
 fragment MULTILINECOMMENT: '{--' .*? '--}';
 fragment ARITHMETICOPERATOR: [+/*\-];
 fragment COMPARAISONOPERATOR:  '<'|'>'|'>='|'<='|'=='|'!=';
 
 //Tokens
+INPUT: 'input';
+OUTPUT: 'output';
 TYPE: 'Int' | 'Float' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 MAIN: 'MainPrgm' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 VAR: 'Var' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
@@ -67,20 +69,32 @@ IDF: LETTER+ (ALPHANUMERICAL+('_'ALPHANUMERICAL+)*)* {validateIDFToken(getText()
 INT: DIGIT+ {validateIntToken(getText(), -32768,32767,getLine(), getCharPositionInLine());}; 
 FLOAT: DIGIT+'.'DIGIT+ | '.'DIGIT+ | DIGIT+'.' {printToken(getText(),"Float Constant",getLine(),getCharPositionInLine());};
 STRING: '"'~["\n]*'"' {printToken(getText(),"String Constant",getLine(),getCharPositionInLine());};
+AFFECT: ':=';
 Separators: '('|')'|'='|';'|'{'|'}'|'['|']'|':'|','|ARITHMETICOPERATOR|COMPARAISONOPERATOR|'!' {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
 COMMENT: MULTILINECOMMENT|INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());};
 WS : [ \t\r\n]+ -> skip;
 ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);};
 
 //Production Rules
-prog:	MAIN IDF ';'  varBlock EOF;
-varBlock: VAR declaration+;
-declaration:  normalDeclaration |  arrayDeclaration;
+prog:	  COMMENT* MAIN IDF ';' COMMENT*  varBlock COMMENT*  mainCode  COMMENT* EOF;
+varBlock: VAR declaration+  | VAR ;
+declaration:  normalDeclaration  |  arrayDeclaration | COMMENT;
 listIDF: IDF(','IDF)*;
 normalDeclaration:  declarationKeyword listIDF ':' TYPE affectValue ';' | declarationKeyword listIDF ':' TYPE ';';
-number : INT | FLOAT;
-affectValue: '=' number ;
+sign  : '+' | '-';
+affectValue:  '=' number ;
+number : '(' sign INT ')' | '(' sign FLOAT ')' | INT | FLOAT ;
 arrayDeclaration: declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';' | declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' ;
 affectArray:  '=' '{' listNumber '}';
 declarationKeyword : DEFINE CONST | LET;
 listNumber : number (',' number)*;
+mainCode: BEGIN  COMMENT* '{' inst+ '}' COMMENT* END ';' | BEGIN  COMMENT* '{' '}' COMMENT* END ';';
+inst: output | input | affectInst |COMMENT;
+input: INPUT '('  listIDF ')' ';';
+output: OUTPUT '(' content ')' ';' ;
+content: ((STRING|IDF) ',')+ (STRING|IDF) |(STRING|IDF);
+affectInst: var AFFECT arithmeticExpression ';';
+arithmeticExpression: arithmeticExpression operation arithmeticExpression  | '(' arithmeticExpression ')' | operator;
+operator: number | IDF;
+var: IDF| IDF '[' INT ']';
+operation: '+' | '-' | '*' | '/';
