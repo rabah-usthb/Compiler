@@ -27,6 +27,49 @@ output(b,a);
 A := (H+2) / (+5);
 B[5] := (H/2) + (5-b+(-3));
 
+while(gay<straight) do {
+for i from 1 to 10 step 2 { 
+  for j/1+(2*i) from i to 10 step 3 {
+    output("u gay asf"); 
+  }
+}
+}
+
+if(gay<straight OR !(gay == 106)) then {
+ output("u gay asf"); 
+}
+  elsif (gay>=straight) then {
+   output("u gay asf"); 
+  }
+ 
+  elsif(gay==601) then { output("u straight asf");  }
+  
+  {-- Partie Instruction 
+  mulit line--}
+
+  else{
+{-- Partie Instruction 
+  mulit line--}
+
+  }
+
+
+do {  output("u gay asf");  } while (!(x < 100) AND y==5+x-(-1));
+
+switch(x){
+  case 1:
+  <!-Partie declaration-!>
+  break;
+
+  case (-1):
+  <!-Partie declaration-!>
+  break;
+
+  default:
+  input(a);
+  break;
+}
+
 }
 EndPg;
 <!-Partie declaration-!>

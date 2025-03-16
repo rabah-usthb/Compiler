@@ -38,7 +38,6 @@ fragment ALPHANUMERICAL: LETTER | DIGIT;
 fragment INLINECOMMENT: '<!-' ~[\n]* '-!>'; 
 fragment MULTILINECOMMENT: '{--' .*? '--}';
 fragment ARITHMETICOPERATOR: [+/*\-];
-fragment COMPARAISONOPERATOR:  '<'|'>'|'>='|'<='|'=='|'!=';
 
 //Tokens
 INPUT: 'input';
@@ -50,7 +49,12 @@ BEGIN: 'BeginPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine
 END: 'EndPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 IF: 'if' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 ELSE: 'else' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
+ELSIF: 'elsif';
 THEN: 'then' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
+SWITCH: 'switch';
+CASE: 'case';
+BREAK: 'break';
+DEFAULT: 'default';
 WHILE: 'while' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 DO: 'do' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 FOR: 'for' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
@@ -70,7 +74,9 @@ INT: DIGIT+ {validateIntToken(getText(), -32768,32767,getLine(), getCharPosition
 FLOAT: DIGIT+'.'DIGIT+ | '.'DIGIT+ | DIGIT+'.' {printToken(getText(),"Float Constant",getLine(),getCharPositionInLine());};
 STRING: '"'~["\n]*'"' {printToken(getText(),"String Constant",getLine(),getCharPositionInLine());};
 AFFECT: ':=';
-Separators: '('|')'|'='|';'|'{'|'}'|'['|']'|':'|','|ARITHMETICOPERATOR|COMPARAISONOPERATOR|'!' {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
+NOT: '!';
+COMPARAISONOPERATOR:  '<'|'>'|'>='|'<='|'=='|'!=';
+Separators: '('|')'|'='|';'|'{'|'}'|'['|']'|':'|','|ARITHMETICOPERATOR|COMPARAISONOPERATOR {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
 COMMENT: MULTILINECOMMENT|INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());};
 WS : [ \t\r\n]+ -> skip;
 ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);};
@@ -89,7 +95,7 @@ affectArray:  '=' '{' listNumber '}';
 declarationKeyword : DEFINE CONST | LET;
 listNumber : number (',' number)*;
 mainCode: BEGIN  COMMENT* '{' inst+ '}' COMMENT* END ';' | BEGIN  COMMENT* '{' '}' COMMENT* END ';';
-inst: output | input | affectInst |COMMENT;
+inst: output | input | affectInst |COMMENT | forInst | doWhileInst |whileInst | ifInst | switchInst;
 input: INPUT '('  listIDF ')' ';';
 output: OUTPUT '(' content ')' ';' ;
 content: ((STRING|IDF) ',')+ (STRING|IDF) |(STRING|IDF);
@@ -98,3 +104,15 @@ arithmeticExpression: arithmeticExpression operation arithmeticExpression  | '('
 operator: number | IDF;
 var: IDF| IDF '[' INT ']';
 operation: '+' | '-' | '*' | '/';
+forInst: FOR IDF(operation arithmeticExpression)? FROM arithmeticExpression TO arithmeticExpression STEP arithmeticExpression '{' inst+ '}';
+doWhileInst: DO '{' inst+ '}' WHILE '(' condition ')' ';';
+whileInst:  WHILE '(' condition ')' DO '{' inst+ '}';
+ifInst: IF '(' condition ')' THEN '{' inst+ '}' elseIfInst? elseInst?;
+elseIfInst: COMMENT* ELSIF '(' condition ')' THEN '{' inst+ '}' elseIfInst | COMMENT* ELSIF '(' condition ')' THEN '{' inst+ '}' ;
+elseInst: COMMENT* ELSE '{' inst+ '}' ;
+switchInst: SWITCH '(' IDF ')' '{' caseInst '}';
+caseInst: CASE number ':' inst+ BREAK ';' defaultInst | CASE number ':' inst+ BREAK ';' caseInst;
+defaultInst: DEFAULT ':' inst+ BREAK ';' ;
+condition: '(' condition ')' | '!' '(' condition ')' | condition logicalOperator condition | partCondition;
+partCondition: IDF COMPARAISONOPERATOR arithmeticExpression;
+logicalOperator: AND | OR | NOT; 

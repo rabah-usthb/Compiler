@@ -226,4 +226,124 @@ public interface ExprListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitOperation(ExprParser.OperationContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#forInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterForInst(ExprParser.ForInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#forInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitForInst(ExprParser.ForInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#doWhileInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterDoWhileInst(ExprParser.DoWhileInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#doWhileInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitDoWhileInst(ExprParser.DoWhileInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#whileInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhileInst(ExprParser.WhileInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#whileInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhileInst(ExprParser.WhileInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#ifInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfInst(ExprParser.IfInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#ifInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfInst(ExprParser.IfInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#elseIfInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseIfInst(ExprParser.ElseIfInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#elseIfInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseIfInst(ExprParser.ElseIfInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#elseInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseInst(ExprParser.ElseInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#elseInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseInst(ExprParser.ElseInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#switchInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterSwitchInst(ExprParser.SwitchInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#switchInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitSwitchInst(ExprParser.SwitchInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#caseInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterCaseInst(ExprParser.CaseInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#caseInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitCaseInst(ExprParser.CaseInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#defaultInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterDefaultInst(ExprParser.DefaultInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#defaultInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitDefaultInst(ExprParser.DefaultInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void enterCondition(ExprParser.ConditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#condition}.
+	 * @param ctx the parse tree
+	 */
+	void exitCondition(ExprParser.ConditionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#partCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterPartCondition(ExprParser.PartConditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#partCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitPartCondition(ExprParser.PartConditionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#logicalOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterLogicalOperator(ExprParser.LogicalOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#logicalOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitLogicalOperator(ExprParser.LogicalOperatorContext ctx);
 }
