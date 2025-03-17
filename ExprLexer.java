@@ -1,4 +1,8 @@
 // Generated from Expr.g4 by ANTLR 4.7.2
+
+  import java.util.HashMap;
+  import java.util.Map;
+
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -47,7 +51,7 @@ public class ExprLexer extends Lexer {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "';'", "','", "':'", "'+'", "'-'", "'='", "'('", "')'", "'['", 
+			null, "';'", "','", "':'", "'='", "'+'", "'-'", "'('", "')'", "'['", 
 			"']'", "'{'", "'}'", "'*'", "'/'", "'input'", "'output'", null, "'MainPrgm'", 
 			"'Var'", "'BeginPg'", "'EndPg'", "'if'", "'else'", "'elsif'", "'then'", 
 			"'switch'", "'case'", "'break'", "'default'", "'while'", "'do'", "'for'", 
@@ -101,18 +105,18 @@ public class ExprLexer extends Lexer {
 	}
 
 
-	 public void printToken(String token , String type, int line , int column) {
-	    //column = column - token.length() + 1;
+	 
+	public void printToken(String token , String type, int line , int column) {
 	    System.out.println("Matched "+type+": "+token+" at line " + line + ", column " + column);
 	 }
 
 	  public void validateIntToken(String token , int min ,int max, int line , int column){
-	    //int column_1 = column - token.length() + 1;
+	  
 	    int value = Integer.parseInt(token);
-	  if(value<min || value >max){
-	 System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
-	            System.exit(1);
-	  }
+	    if(value<min || value >max) {
+	    System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
+	    //System.exit(1);
+	   }
 	  else {
 	    printToken(token,"Int Constant",line,column);
 	  }
@@ -120,14 +124,17 @@ public class ExprLexer extends Lexer {
 
 	 public void validateIDFToken(String token , int maxLength , int line , int column){
 	    column = column - token.length() + 1;
-	  if(token.length()>14){
-	 System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
-	            System.exit(1);
-	  }
-	  else {
-	    printToken(token,"Identifier",line,column);
-	  }
+	    if(token.length()>14){
+	      System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
+	      IDF_HashTable.table.updateError(token,"Identifier exceeds maximum length of " + maxLength);
+	      //System.exit(1);
+	    }
+	    else {
+	      printToken(token,"Identifier",line,column);
+	      IDF_HashTable.table.insert(token);
+	    }
 	 }
+
 
 
 	public ExprLexer(CharStream input) {
@@ -479,8 +486,8 @@ public class ExprLexer extends Lexer {
 		"\3\2\2\2]\u0167\3\2\2\2_\u0170\3\2\2\2a\u018c\3\2\2\2c\u01ab\3\2\2\2e"+
 		"\u01ad\3\2\2\2g\u01b7\3\2\2\2i\u01ba\3\2\2\2k\u01c5\3\2\2\2m\u01cc\3\2"+
 		"\2\2o\u01d2\3\2\2\2q\u01d5\3\2\2\2s\u01db\3\2\2\2uv\7=\2\2v\4\3\2\2\2"+
-		"wx\7.\2\2x\6\3\2\2\2yz\7<\2\2z\b\3\2\2\2{|\7-\2\2|\n\3\2\2\2}~\7/\2\2"+
-		"~\f\3\2\2\2\177\u0080\7?\2\2\u0080\16\3\2\2\2\u0081\u0082\7*\2\2\u0082"+
+		"wx\7.\2\2x\6\3\2\2\2yz\7<\2\2z\b\3\2\2\2{|\7?\2\2|\n\3\2\2\2}~\7-\2\2"+
+		"~\f\3\2\2\2\177\u0080\7/\2\2\u0080\16\3\2\2\2\u0081\u0082\7*\2\2\u0082"+
 		"\20\3\2\2\2\u0083\u0084\7+\2\2\u0084\22\3\2\2\2\u0085\u0086\7]\2\2\u0086"+
 		"\24\3\2\2\2\u0087\u0088\7_\2\2\u0088\26\3\2\2\2\u0089\u008a\7}\2\2\u008a"+
 		"\30\3\2\2\2\u008b\u008c\7\177\2\2\u008c\32\3\2\2\2\u008d\u008e\7,\2\2"+

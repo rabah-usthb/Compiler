@@ -7,3 +7,5 @@ switch case                                     done
 while loop                                      done 
 2d matrix
 matrix index > 0
+missmatch                                       done
+redefinition                                    done

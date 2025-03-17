@@ -4,19 +4,22 @@ MainPrgm L3_h;
 <!-Partie declaration-!>
 
 Var
-let a,b : Int = (-223);{-- Partie Instruction 
+let d,d2,a12 : Float = (-.212);
+let a,b : Int = (-223);
+let a : Int = 12;{-- Partie Instruction 
   mulit line--}
-
+let ddd : Int = (-21.21)
 <!-Partie declaration-!>
 
 let c : [Int ; 10] = {1,(+21),2};
 <!-Partie declaration-!>
 
 BeginPg {
-
+a := 10;
 input(a,a,a,ab,a,a);
 output("hello");
 output("hello",a,b,"world",q);
+a := 22;
 output("hello",a,b,"world");
 output("hello","world");
 output("hello world");
@@ -24,7 +27,7 @@ output("hello",b);
 output(b,"hello");
 output(b,a);
 
-A := (H+2) / (+5);
+A := (H+2) / A[2];
 B[5] := (H/2) + (5-b+(-3));
 
 while(gay<straight) do {

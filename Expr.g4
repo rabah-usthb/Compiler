@@ -1,18 +1,24 @@
 grammar Expr;
 
-@lexer::members {
- public void printToken(String token , String type, int line , int column) {
-    //column = column - token.length() + 1;
+@header {
+  import java.util.HashMap;
+  import java.util.Map;
+}
+
+
+@lexer::members{
+ 
+public void printToken(String token , String type, int line , int column) {
     System.out.println("Matched "+type+": "+token+" at line " + line + ", column " + column);
  }
 
   public void validateIntToken(String token , int min ,int max, int line , int column){
-    //int column_1 = column - token.length() + 1;
+  
     int value = Integer.parseInt(token);
-  if(value<min || value >max){
- System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
-            System.exit(1);
-  }
+    if(value<min || value >max) {
+    System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
+    //System.exit(1);
+   }
   else {
     printToken(token,"Int Constant",line,column);
   }
@@ -20,15 +26,19 @@ grammar Expr;
 
  public void validateIDFToken(String token , int maxLength , int line , int column){
     column = column - token.length() + 1;
-  if(token.length()>14){
- System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
-            System.exit(1);
-  }
-  else {
-    printToken(token,"Identifier",line,column);
-  }
+    if(token.length()>14){
+      System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
+      IDF_HashTable.table.updateError(token,"Identifier exceeds maximum length of " + maxLength);
+      //System.exit(1);
+    }
+    else {
+      printToken(token,"Identifier",line,column);
+      IDF_HashTable.table.insert(token);
+    }
  }
+
 }
+
 
 
 //Fragements
@@ -81,15 +91,27 @@ COMMENT: MULTILINECOMMENT|INLINECOMMENT {printToken(getText(),"Comment",getLine(
 WS : [ \t\r\n]+ -> skip;
 ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);};
 
+
 //Production Rules
-prog:	  COMMENT* MAIN IDF ';' COMMENT*  varBlock COMMENT*  mainCode  COMMENT* EOF;
+prog:	  COMMENT* MAIN IDF ';' COMMENT*  varBlock COMMENT*  mainCode  COMMENT* EOF {IDF_HashTable.table.printTable();};
 varBlock: VAR declaration+  | VAR ;
 declaration:  normalDeclaration  |  arrayDeclaration | COMMENT;
 listIDF: IDF(','IDF)*;
-normalDeclaration:  declarationKeyword listIDF ':' TYPE affectValue ';' | declarationKeyword listIDF ':' TYPE ';';
+normalDeclaration:  declarationKeyword listIDF ':' TYPE '=' affectValue ';'
+{
+    for (String idf : $listIDF.text.split(",")) { 
+        IDF_HashTable.table.updateTypeValue(idf.trim(), $TYPE.text,$affectValue.text,$affectValue.type);
+    }
+}
+ | declarationKeyword listIDF ':' TYPE ';' 
+{
+    for (String idf : $listIDF.text.split(",")) { 
+        IDF_HashTable.table.updateType(idf.trim(), $TYPE.text);
+    }
+};
 sign  : '+' | '-';
-affectValue:  '=' number ;
-number : '(' sign INT ')' | '(' sign FLOAT ')' | INT | FLOAT ;
+affectValue returns [String type] :   number {$type = $number.type;} ;
+number returns [String type] : '(' sign INT ')'{ $type = "INT"; } | '(' sign FLOAT ')' { $type = "FLOAT"; } | INT { $type = "INT"; }  | FLOAT { $type = "FLOAT"; }  ;
 arrayDeclaration: declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';' | declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' ;
 affectArray:  '=' '{' listNumber '}';
 declarationKeyword : DEFINE CONST | LET;
@@ -101,7 +123,7 @@ output: OUTPUT '(' content ')' ';' ;
 content: ((STRING|IDF) ',')+ (STRING|IDF) |(STRING|IDF);
 affectInst: var AFFECT arithmeticExpression ';';
 arithmeticExpression: arithmeticExpression operation arithmeticExpression  | '(' arithmeticExpression ')' | operator;
-operator: number | IDF;
+operator: number | var;
 var: IDF| IDF '[' INT ']';
 operation: '+' | '-' | '*' | '/';
 forInst: FOR IDF(operation arithmeticExpression)? FROM arithmeticExpression TO arithmeticExpression STEP arithmeticExpression '{' inst+ '}';
