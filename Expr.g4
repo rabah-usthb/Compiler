@@ -6,6 +6,7 @@ grammar Expr;
 }
 
 
+
 @lexer::members{
  
 public void printToken(String token , String type, int line , int column) {
@@ -86,7 +87,9 @@ STRING: '"'~["\n]*'"' {printToken(getText(),"String Constant",getLine(),getCharP
 AFFECT: ':=';
 NOT: '!';
 COMPARAISONOPERATOR:  '<'|'>'|'>='|'<='|'=='|'!=';
-Separators: '('|')'|'='|';'|'{'|'}'|'['|']'|':'|','|ARITHMETICOPERATOR|COMPARAISONOPERATOR {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
+LBRACE: '{';
+RBRACE: '}';
+Separators: '('|')'|'='|';'|'['|']'|':'|','|ARITHMETICOPERATOR|COMPARAISONOPERATOR {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
 COMMENT: MULTILINECOMMENT|INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());};
 WS : [ \t\r\n]+ -> skip;
 ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);};

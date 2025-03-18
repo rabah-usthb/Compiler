@@ -5,7 +5,7 @@ String type
 Char type
 switch case                                     done
 while loop                                      done 
-2d matrix
-matrix index > 0
+2d matrix                                   
+matrix index > 0 , index <size
 missmatch                                       done
 redefinition                                    done

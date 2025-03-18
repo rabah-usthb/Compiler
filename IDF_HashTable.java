@@ -39,9 +39,11 @@ public class IDF_HashTable {
         if(!type.equalsIgnoreCase(tokenType)) {updateError(IDF_Name,"Missmatch Type");}
         else {
            String sign = getSign(value);
+           System.out.println("value : "+value+" Sign : "+sign);
            value = value.replace("(","").replace(")","").replace(sign,"");
            value = addZero(value);
-           this.IDF_Map.get(IDF_Name).value = sign+value;}
+           value = sign+value;
+           this.IDF_Map.get(IDF_Name).value = value;}
         break;
      } 
      this.IDF_Map.get(IDF_Name).value = value;
@@ -61,7 +63,13 @@ public class IDF_HashTable {
       this.IDF_Map.put(IDF_Name,new IDF_Attributs(error));
     }
     else {
+      if(this.IDF_Map.get(IDF_Name).error.toString().equalsIgnoreCase("No Error")){ 
+         this.IDF_Map.get(IDF_Name).error.setLength(0); 
+          this.IDF_Map.get(IDF_Name).error.append(error);
+      }
+      else{
       this.IDF_Map.get(IDF_Name).error.append("\n"+error);
+      }
     }
   }
 
