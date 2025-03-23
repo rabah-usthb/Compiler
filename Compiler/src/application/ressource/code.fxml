@@ -13,6 +13,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FrontEnd.InitIDE">
    <top>
@@ -39,9 +40,18 @@
             </MenuBar>
             <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" prefHeight="31.0" prefWidth="600.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" text="Lexer" />
-                  <Button mnemonicParsing="false" text="Parse" />
-                  <Button mnemonicParsing="false" text="Semantic" />
+                  <Button fx:id="lexer" mnemonicParsing="false" onAction="#Lexer" text="Lexer">
+                     <HBox.margin>
+                        <Insets top="1.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" text="Parse">
+                     <HBox.margin>
+                        <Insets top="1.0" />
+                     </HBox.margin></Button>
+                  <Button mnemonicParsing="false" text="Semantic">
+                     <HBox.margin>
+                        <Insets top="1.0" />
+                     </HBox.margin></Button>
                </children>
                <VBox.margin>
                   <Insets />
@@ -76,4 +86,15 @@
         </tabs>
       </TabPane>
    </center>
+   <bottom>
+      <TabPane prefHeight="86.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab closable="false" text="console">
+               <content>
+                  <TextFlow fx:id="console" prefHeight="200.0" prefWidth="200.0" />
+               </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </bottom>
 </BorderPane>

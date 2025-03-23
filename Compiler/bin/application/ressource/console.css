@@ -1,0 +1,38 @@
+@font-face {
+    font-family: Roboto;
+    src: url('RobotoMono-Medium.ttf');
+}
+
+
+.scroll-pane {
+   -fx-background-color: transparent;
+}
+
+
+.scroll-pane .viewport {
+       -fx-background-color: transparent;
+}
+
+#console > Text {
+	-fx-font-family: "Roboto";
+	-fx-font-size: 14.5px;
+}
+
+.error-text{
+	-fx-fill:red;
+}
+
+.normal-text{
+	-fx-fill:#f8f8f2;
+}
+
+.fail-text{
+	-fx-fill:red;
+    -fx-font-weight:bold;
+}
+
+.suc-text{
+	-fx-fill:#15de64;
+	-fx-font-weight:bold;
+}
+

@@ -8,12 +8,39 @@
 	-fx-font-style: italic;
 }
 
-.styled-text-area .text.var , .styled-text-area .text.main {
-    -fx-fill: blue;
+.styled-text-area .text.var , .styled-text-area .text.main, 
+.styled-text-area .text.begin, .styled-text-area .text.end {
+    -fx-fill: #0f6ccc;
+    -fx-font-weight: bold;
 }
 
+.styled-text-area .text.then , .styled-text-area .text.while, 
+.styled-text-area .text.switch, .styled-text-area .text.for,
+.styled-text-area .text.if, .styled-text-area .text.else, 
+.styled-text-area .text.break, .styled-text-area .text.elsif,
+.styled-text-area .text.default, .styled-text-area .text.case,
+.styled-text-area .text.do, .styled-text-area .text.step,
+.styled-text-area .text.to ,.styled-text-area .text.from,
+.styled-text-area .text.and ,.styled-text-area .text.or,
+.styled-text-area .text.const, .styled-text-area .text.let{
+-fx-fill: #1bacd0;
+}
+
+.styled-text-area .text.output , .styled-text-area .text.input{
+-fx-fill:#e2df0b;
+}
+
+.styled-text-area .text.string , .styled-text-area .text.char{
+-fx-fill:#bd6e37;
+}
+
+.styled-text-area .text.define{
+-fx-fill:#d9163b;	
+}
+
+
 .styled-text-area .text.type {
-    -fx-fill: green;
+    -fx-fill: #27cb92;
 }
 
 .styled-text-area .text{

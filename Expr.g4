@@ -7,41 +7,6 @@ grammar Expr;
 
 
 
-@lexer::members{
- 
-public void printToken(String token , String type, int line , int column) {
-    System.out.println("Matched "+type+": "+token+" at line " + line + ", column " + column);
- }
-
-  public void validateIntToken(String token , int min ,int max, int line , int column){
-  
-    int value = Integer.parseInt(token);
-    if(value<min || value >max) {
-    System.err.println("Error: Int Constant "+ token + " exceeds maximum value range of [" +min+"," +max+"] At line "+ line+" Column "+column);
-    //System.exit(1);
-   }
-  else {
-    printToken(token,"Int Constant",line,column);
-  }
- }
-
- public void validateIDFToken(String token , int maxLength , int line , int column){
-    column = column - token.length() + 1;
-    if(token.length()>14){
-      System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
-      IDF_HashTable.table.updateError(token,"Identifier exceeds maximum length of " + maxLength);
-      //System.exit(1);
-    }
-    else {
-      printToken(token,"Identifier",line,column);
-      IDF_HashTable.table.insert(token);
-    }
- }
-
-}
-
-
-
 //Fragements
 fragment LETTER: [a-zA-Z];
 fragment DIGIT: [0-9];
@@ -51,55 +16,66 @@ fragment MULTILINECOMMENT: '{--' .*? '--}';
 
 
 //Tokens
-INPUT: 'input';
-OUTPUT: 'output';
-TYPE: 'Int' | 'Float'| 'Bool' | 'String' | 'Char' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-MAIN: 'MainPrgm' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-VAR: 'Var' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-BEGIN: 'BeginPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-END: 'EndPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-IF: 'if' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-ELSE: 'else' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-ELSIF: 'elsif';
-THEN: 'then' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-SWITCH: 'switch';
-CASE: 'case';
-BREAK: 'break';
-DEFAULT: 'default';
-WHILE: 'while' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-DO: 'do' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-FOR: 'for' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-FROM: 'from' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-TO: 'to' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-STEP: 'step' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-AND: 'AND' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-OR: 'OR' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-LET: 'let' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-DEFINE: '@Define' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
-CONST: 'const' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
+INPUT: 'input'; 
+OUTPUT: 'output' ;
+TYPE: 'Int' | 'Float'| 'Bool' | 'String' | 'Char' ;
+MAIN: 'MainPrgm' ;
+VAR: 'Var' ;
+BEGIN: 'BeginPg' ;
+END: 'EndPg' ;
+IF: 'if' ;
+ELSE: 'else' ;
+ELSIF: 'elsif' ;
+THEN: 'then' ;
+SWITCH: 'switch' ;
+CASE: 'case' ;
+BREAK: 'break' ;
+DEFAULT: 'default' ;
+WHILE: 'while' ;
+DO: 'do' ;
+FOR: 'for' ;
+FROM: 'from' ;
+TO: 'to' ;
+STEP: 'step' ;
+AND: 'AND' ;
+OR: 'OR' ;
+LET: 'let' ;
+DEFINE: '@define';
+CONST: 'Const';
 
-IDF: LETTER+ (ALPHANUMERICAL+('_'ALPHANUMERICAL+)*)* {validateIDFToken(getText(), 14,getLine(), getCharPositionInLine());};
+IDF: LETTER+ (ALPHANUMERICAL+('_'ALPHANUMERICAL+)*)*;
 
+INT: DIGIT+; 
+FLOAT: DIGIT+'.'DIGIT+ | '.'DIGIT+ | DIGIT+'.' ;
+STRING: '"'~["\n]*'"';
+CHAR: '\''~['\n]?'\'';
 
-INT: DIGIT+ {validateIntToken(getText(), -32768,32767,getLine(), getCharPositionInLine());}; 
-FLOAT: DIGIT+'.'DIGIT+ | '.'DIGIT+ | DIGIT+'.' {printToken(getText(),"Float Constant",getLine(),getCharPositionInLine());};
-STRING: '"'~["\n]*'"' {printToken(getText(),"String Constant",getLine(),getCharPositionInLine());};
 AFFECT: ':=';
 NOT: '!';
-COMPARAISONOPERATOR:  '<'|'>'|'>='|'<='|'=='|'!=';
+GREATER: '>';
+LESSER: '<';
+GEQ: '>=';
+LEQ: '<=';
+EQ: '==';
+NEQ: '!=';
 LBRACE: '{';
 RBRACE: '}';
 PLUS: '+';
 SUB: '-';
 MUL: '*';
 DIV: '/';
+COM: ',';
+SEMI: ';';
+LBRACKET: '[';
+RBRACKET: ']';
+LPAR: '(';
+RPAR: ')';
+ASSIGN: '=';
+TWOPOINT: ':';
 
-Separators: '('|')'|'='|';'|'['|']'|':'|','|COMPARAISONOPERATOR {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
-COMMENT: MULTILINECOMMENT|INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());};
+COMMENT: MULTILINECOMMENT|INLINECOMMENT;
 WS : [ \t\r\n]+ -> skip;
-ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());
-//System.exit(1);
-};
+ERROR_TOKEN: .;
 
 
 //Production Rules
@@ -120,7 +96,7 @@ normalDeclaration:  declarationKeyword listIDF ':' TYPE '=' affectValue ';'
     }
 };
 sign  : '+' | '-';
-affectValue returns [String type] :   number {$type = $number.type;} ;
+affectValue returns [String type] :   number {$type = $number.type;} | STRING {$type = "STRING";} | CHAR {$type = "CHAR";} ; 
 number returns [String type] : '(' sign INT ')'{ $type = "INT"; } | '(' sign FLOAT ')' { $type = "FLOAT"; } | INT { $type = "INT"; }  | FLOAT { $type = "FLOAT"; }  ;
 arrayDeclaration: declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';' | declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' ;
 affectArray:  '=' '{' listNumber '}';
@@ -146,5 +122,6 @@ switchInst: SWITCH '(' IDF ')' '{' caseInst '}';
 caseInst: CASE number ':' inst+ BREAK ';' defaultInst | CASE number ':' inst+ BREAK ';' caseInst;
 defaultInst: DEFAULT ':' inst+ BREAK ';' ;
 condition: '(' condition ')' | '!' '(' condition ')' | condition logicalOperator condition | partCondition;
-partCondition: IDF COMPARAISONOPERATOR arithmeticExpression;
+partCondition: IDF comparaisonOperator arithmeticExpression;
+comparaisonOperator: EQ|NEQ|GREATER|LESSER|GEQ|LEQ;
 logicalOperator: AND | OR | NOT; 

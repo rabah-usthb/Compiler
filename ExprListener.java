@@ -341,6 +341,16 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitPartCondition(ExprParser.PartConditionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ExprParser#comparaisonOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterComparaisonOperator(ExprParser.ComparaisonOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#comparaisonOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitComparaisonOperator(ExprParser.ComparaisonOperatorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ExprParser#logicalOperator}.
 	 * @param ctx the parse tree
 	 */

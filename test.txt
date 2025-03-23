@@ -16,7 +16,7 @@ BegiPg
   Float n1 = .21;
   Float n2 = 21.;
   Int c = 021;
-  Int a = 3322;
+  Int a = 3322w3 ;
   Int b = -302;
   
 }
