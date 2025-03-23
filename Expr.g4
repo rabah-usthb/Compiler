@@ -48,12 +48,12 @@ fragment DIGIT: [0-9];
 fragment ALPHANUMERICAL: LETTER | DIGIT;
 fragment INLINECOMMENT: '<!-' ~[\n]* '-!>'; 
 fragment MULTILINECOMMENT: '{--' .*? '--}';
-fragment ARITHMETICOPERATOR: [+/*\-];
+
 
 //Tokens
 INPUT: 'input';
 OUTPUT: 'output';
-TYPE: 'Int' | 'Float' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
+TYPE: 'Int' | 'Float'| 'Bool' | 'String' | 'Char' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 MAIN: 'MainPrgm' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 VAR: 'Var' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
 BEGIN: 'BeginPg' {printToken(getText(),"Keyword",getLine(),getCharPositionInLine());};
@@ -89,10 +89,17 @@ NOT: '!';
 COMPARAISONOPERATOR:  '<'|'>'|'>='|'<='|'=='|'!=';
 LBRACE: '{';
 RBRACE: '}';
-Separators: '('|')'|'='|';'|'['|']'|':'|','|ARITHMETICOPERATOR|COMPARAISONOPERATOR {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
+PLUS: '+';
+SUB: '-';
+MUL: '*';
+DIV: '/';
+
+Separators: '('|')'|'='|';'|'['|']'|':'|','|COMPARAISONOPERATOR {printToken(getText(),"Separator",getLine(),getCharPositionInLine());};
 COMMENT: MULTILINECOMMENT|INLINECOMMENT {printToken(getText(),"Comment",getLine(),getCharPositionInLine());};
 WS : [ \t\r\n]+ -> skip;
-ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());System.exit(1);};
+ERROR_TOKEN: . {System.err.println("Error: Unknown Token "+ getText() + " At line "+ getLine()+" Column "+getCharPositionInLine());
+//System.exit(1);
+};
 
 
 //Production Rules

@@ -1,0 +1,57 @@
+@font-face {
+    font-family: Roboto;
+    src: url('RobotoMono-Medium.ttf');
+}
+
+.styled-text-area .text.comment  {
+	-fx-fill: green;
+	-fx-font-style: italic;
+}
+
+.styled-text-area .text.var , .styled-text-area .text.main {
+    -fx-fill: blue;
+}
+
+.styled-text-area .text.type {
+    -fx-fill: green;
+}
+
+.styled-text-area .text{
+  -fx-fill: #f8f8f2;
+}
+
+.code-area .paragraph-text {
+    -fx-font-family: "Roboto";
+    -fx-font-size: 16px;
+}
+
+
+
+
+.lineno {
+	-fx-border-color: black;
+	-fx-border-width: 0 1px 0 0;
+    -fx-background-color: #303030;
+     -fx-alignment:center; 
+}
+
+.lineno .text{
+	  -fx-fill: #f8f8f2;
+}
+
+
+.styled-text-area{
+  -fx-background-color: #272822;
+}
+
+
+
+
+.paragraph-box:has-caret {
+   -fx-background-color: #1c1c1c99;
+}
+
+.code-area .caret {
+    -fx-stroke:  #eff5e6; 
+}
+

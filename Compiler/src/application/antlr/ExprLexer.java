@@ -1,3 +1,5 @@
+package application.antlr;
+
 // Generated from Expr.g4 by ANTLR 4.7.2
 
   import java.util.HashMap;
@@ -125,12 +127,12 @@ public class ExprLexer extends Lexer {
 	    column = column - token.length() + 1;
 	    if(token.length()>14){
 	      System.err.println("Error: Identifier "+ token + " exceeds maximum length of " + maxLength + " At line "+ line+" Column "+column);
-	      IDF_HashTable.table.updateError(token,"Identifier exceeds maximum length of " + maxLength);
+	//      IDF_HashTable.table.updateError(token,"Identifier exceeds maximum length of " + maxLength);
 	      //System.exit(1);
 	    }
 	    else {
 	      printToken(token,"Identifier",line,column);
-	      IDF_HashTable.table.insert(token);
+	   //   IDF_HashTable.table.insert(token);
 	    }
 	 }
 

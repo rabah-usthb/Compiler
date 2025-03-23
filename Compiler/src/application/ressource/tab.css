@@ -1,0 +1,54 @@
+
+.tab-close-button {
+    -fx-background-color: blue;
+	-fx-effect: none;
+}
+
+.tab{
+    -fx-background-insets: 0 1.5 0 0;
+}
+
+
+.tab-pane  {
+   
+	-fx-background-color: #3c3f41;
+}
+
+
+
+
+
+.tab-pane .tab {
+	-fx-pref-width: 90px; 
+    -fx-background-color: #3d3e3f;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	 
+}
+
+
+.tab .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #828282;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+    -fx-text-fill: #f8f8f2;
+}
+
+
+#add {
+	-fx-tab-min-width: 22px; 
+	-fx-background-insets: 0 0 3.5 3;
+	-fx-background-color: green;
+	-fx-border-radius:50%;
+	-fx-background-radius:50%;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+	-fx-pref-width: 22px; 
+	-fx-pref-height: 22px;
+}
+
