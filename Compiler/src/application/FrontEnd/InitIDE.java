@@ -4,19 +4,26 @@ package application.FrontEnd;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
+import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CodePointCharStream;
+import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.*;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import application.antlr.ExprLexer;
+import application.antlr.ExprParser;
 import application.antlr.PrintLexerOutput;
+import application.antlr.PrintParserOutput;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -56,6 +63,117 @@ private TextFlow console;
 @FXML
 Button lexer;
 
+private void setSectionTitle(String text) {
+	Text title = new Text(text+"\n\n");
+	title.getStyleClass().add("section");
+	console.getChildren().add(title);
+}
+
+
+private void setLexicalOutput(ExprLexer lexer) {
+	
+	setSectionTitle("Lexical Analysis: ");
+	lexer.removeErrorListeners();
+    
+	PrintLexerOutput printer = new PrintLexerOutput(lexer);
+    printer.printAllToken();
+    String[] lines = printer.output.toString().split("\n");
+    
+    LinkedList<Text> textList = new LinkedList<>();
+    
+    for(String line : lines) {
+  	
+  	  Text text = new Text(line+"\n");
+  	  if(line.startsWith("Error")||line.startsWith("Undefined")) {
+  		  System.out.println(line);
+  		  text.getStyleClass().add("error-text");    
+  	 }
+  	  else {
+  		  text.getStyleClass().add("normal-text");  
+  	  }
+  	  textList.add(text);
+    }
+    
+    Text text = new Text();
+    if(printer.nb == 0) {
+  	  text.setText("Lexical Analysis Successfull 0 Error Found");
+  	  text.getStyleClass().add("suc-text"); 
+    }
+    else {
+  	  text.setText("Lexical Analysis Not Successfull "+printer.nb+" Error Found");
+  	  text.getStyleClass().add("fail-text"); 
+    }
+    
+    textList.add(text);
+    
+    console.getChildren().addAll(textList);
+}
+
+private void setParserOutput (PrintParserOutput listener){
+	 setSectionTitle("\nSyntatic Analysis: ");
+	 
+	 String[] listLines = listener.output.toString().split("\n");
+	     
+	     LinkedList<Text> textList = new LinkedList<>();
+	     
+	     for (String line : listLines) {
+	    	 System.out.println(line);
+	    	 Text text = new Text(line+"\n");
+	    	 text.getStyleClass().add("error-text");
+	    	 textList.add(text);
+	     }
+	     
+	     Text conslusion = new Text();
+	     if(listener.nb == 0) {
+	      conslusion.setText("Syntatic Analysis Successfull 0 Error Found");
+	      conslusion.getStyleClass().add("suc-text"); 
+	     }
+	     else {
+	      conslusion.setText("Syntatic Analysis Not Successfull "+listener.nb+" Error Found");
+	      conslusion.getStyleClass().add("fail-text"); 
+	     }
+	     
+	     textList.add(conslusion);
+	     
+	     console.getChildren().addAll(textList);
+
+	
+}
+
+
+
+
+
+
+public void Parser(ActionEvent e) {
+	 
+	 console.getChildren().clear();
+	 String input = codeArea.getText();
+	 
+	 ExprLexer lexer_1 = new ExprLexer(CharStreams.fromString(input));
+	 setLexicalOutput(lexer_1);
+     
+	 ExprLexer lexer = new ExprLexer(CharStreams.fromString(input));
+	 lexer.removeErrorListeners();
+	 
+	 CommonTokenStream tokens = new CommonTokenStream(lexer);
+	 tokens.fill();
+	 
+     ExprParser parser = new  ExprParser(tokens);
+     parser.removeErrorListeners();
+     
+      PrintParserOutput listener = new PrintParserOutput();
+      parser.addErrorListener(listener);
+     
+     ParseTree tree = parser.prog();
+  
+     TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()),tree);
+     viewer.open(); 
+     
+     setParserOutput(listener);    
+ 
+}
+
 
 public void Lexer(ActionEvent e) {
 	
@@ -66,42 +184,8 @@ public void Lexer(ActionEvent e) {
 	 
 	  
       ExprLexer lexer = new ExprLexer(CharStreams.fromString(input));
-      lexer.removeErrorListeners();
-      PrintLexerOutput printer = new PrintLexerOutput(lexer);
-      printer.printAllToken();
-      String[] lines = printer.output.toString().split("\n");
       
-      LinkedList<Text> textList = new LinkedList<>();
-      
-      for(String line : lines) {
-    	
-    	  Text text = new Text(line+"\n");
-    	  if(line.startsWith("Error")||line.startsWith("Undefined")) {
-    		  System.out.println(line);
-    		  text.getStyleClass().add("error-text");    
-    	 }
-    	  else {
-    		  text.getStyleClass().add("normal-text");  
-    	  }
-    	  textList.add(text);
-      }
-      
-      Text text = new Text();
-      if(printer.nb == 0) {
-    	  text.setText("Lexical Analysis Successfull 0 Error Found");
-    	  text.getStyleClass().add("suc-text"); 
-      }
-      else {
-    	  text.setText("Lexical Analysis Not Successfull "+printer.nb+" Error Found");
-    	  text.getStyleClass().add("fail-text"); 
-      }
-      
-      textList.add(text);
-      
-      System.out.println(console);
-      console.getChildren().addAll(textList);
-      
-      
+      setLexicalOutput(lexer);
       
 }
 

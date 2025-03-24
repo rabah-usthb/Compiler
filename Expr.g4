@@ -79,22 +79,11 @@ ERROR_TOKEN: .;
 
 
 //Production Rules
-prog:	  COMMENT* MAIN IDF ';' COMMENT*  varBlock COMMENT*  mainCode  COMMENT* EOF {IDF_HashTable.table.printTable();};
+prog:	  COMMENT* MAIN IDF ';' COMMENT*  varBlock COMMENT*  mainCode  COMMENT* EOF;
 varBlock: VAR declaration+  | VAR ;
 declaration:  normalDeclaration  |  arrayDeclaration | COMMENT;
 listIDF: IDF(','IDF)*;
-normalDeclaration:  declarationKeyword listIDF ':' TYPE '=' affectValue ';'
-{
-    for (String idf : $listIDF.text.split(",")) { 
-        IDF_HashTable.table.updateTypeValue(idf.trim(), $TYPE.text,$affectValue.text,$affectValue.type);
-    }
-}
- | declarationKeyword listIDF ':' TYPE ';' 
-{
-    for (String idf : $listIDF.text.split(",")) { 
-        IDF_HashTable.table.updateType(idf.trim(), $TYPE.text);
-    }
-};
+normalDeclaration:  declarationKeyword listIDF ':' TYPE '=' affectValue ';' | declarationKeyword listIDF ':' TYPE ';'; 
 sign  : '+' | '-';
 affectValue returns [String type] :   number {$type = $number.type;} | STRING {$type = "STRING";} | CHAR {$type = "CHAR";} ; 
 number returns [String type] : '(' sign INT ')'{ $type = "INT"; } | '(' sign FLOAT ')' { $type = "FLOAT"; } | INT { $type = "INT"; }  | FLOAT { $type = "FLOAT"; }  ;

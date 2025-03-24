@@ -18,6 +18,12 @@
 	-fx-font-size: 14.5px;
 }
 
+.section{
+	-fx-fill:#1679df;
+	-fx-underline: true;
+	-fx-font-weight:bold;
+}
+
 .error-text{
 	-fx-fill:red;
 }

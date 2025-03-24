@@ -46,7 +46,7 @@
                      <HBox.margin>
                         <Insets top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" text="Parse">
+                  <Button fx:id="Parse" mnemonicParsing="false" onAction="#Parser" text="Parse">
                      <HBox.margin>
                         <Insets top="1.0" />
                      </HBox.margin></Button>
