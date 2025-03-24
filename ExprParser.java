@@ -1273,13 +1273,14 @@ public class ExprParser extends Parser {
 	}
 
 	public static class InputContext extends ParserRuleContext {
-		public TerminalNode INPUT() { return getToken(ExprParser.INPUT, 0); }
+		public Token id;
 		public TerminalNode LPAR() { return getToken(ExprParser.LPAR, 0); }
 		public ListIDFContext listIDF() {
 			return getRuleContext(ListIDFContext.class,0);
 		}
 		public TerminalNode RPAR() { return getToken(ExprParser.RPAR, 0); }
 		public TerminalNode SEMI() { return getToken(ExprParser.SEMI, 0); }
+		public TerminalNode INPUT() { return getToken(ExprParser.INPUT, 0); }
 		public InputContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1301,7 +1302,7 @@ public class ExprParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(262);
-			match(INPUT);
+			((InputContext)_localctx).id = match(INPUT);
 			setState(263);
 			match(LPAR);
 			setState(264);
@@ -1324,13 +1325,14 @@ public class ExprParser extends Parser {
 	}
 
 	public static class OutputContext extends ParserRuleContext {
-		public TerminalNode OUTPUT() { return getToken(ExprParser.OUTPUT, 0); }
+		public Token id;
 		public TerminalNode LPAR() { return getToken(ExprParser.LPAR, 0); }
 		public ContentContext content() {
 			return getRuleContext(ContentContext.class,0);
 		}
 		public TerminalNode RPAR() { return getToken(ExprParser.RPAR, 0); }
 		public TerminalNode SEMI() { return getToken(ExprParser.SEMI, 0); }
+		public TerminalNode OUTPUT() { return getToken(ExprParser.OUTPUT, 0); }
 		public OutputContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1352,7 +1354,7 @@ public class ExprParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(268);
-			match(OUTPUT);
+			((OutputContext)_localctx).id = match(OUTPUT);
 			setState(269);
 			match(LPAR);
 			setState(270);

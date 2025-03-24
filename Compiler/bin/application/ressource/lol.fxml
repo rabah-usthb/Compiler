@@ -50,7 +50,7 @@
                      <HBox.margin>
                         <Insets top="1.0" />
                      </HBox.margin></Button>
-                  <Button mnemonicParsing="false" text="Semantic">
+                  <Button mnemonicParsing="false" onAction="#Semantic" text="Semantic">
                      <HBox.margin>
                         <Insets top="1.0" />
                      </HBox.margin></Button>
@@ -70,7 +70,7 @@
         <items>
              <TabPane prefHeight="84.0" prefWidth="600.0" tabClosingPolicy="ALL_TABS" BorderPane.alignment="CENTER">
         <tabs>
-          <Tab text="Untitled">
+          <Tab text="Keywords">
             <content>
               <AnchorPane fx:id="codePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>

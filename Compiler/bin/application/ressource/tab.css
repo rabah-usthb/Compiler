@@ -5,6 +5,8 @@
 }
 
 .tab{
+	 -fx-padding: 1 10 1 10;
+	
     -fx-background-insets: 0 1.5 0 0;
 }
 
@@ -19,7 +21,6 @@
 
 
 .tab-pane .tab {
-	-fx-pref-width: 90px; 
     -fx-background-color: #3d3e3f;
 	-fx-focus-color: transparent;
 	-fx-faint-focus-color: transparent;
@@ -28,6 +29,7 @@
 
 
 .tab .tab-label {
+	
     -fx-alignment: CENTER;
     -fx-text-fill: #828282;
     -fx-font-size: 12px;
@@ -35,12 +37,14 @@
 }
 
 .tab:selected .tab-label {
+
     -fx-alignment: CENTER;
     -fx-text-fill: #f8f8f2;
 }
 
 
 #add {
+	-fx-padding: 5.4 6 5.4 6;
 	-fx-tab-min-width: 22px; 
 	-fx-background-insets: 0 0 3.5 3;
 	-fx-background-color: green;

@@ -2,6 +2,7 @@ package application.FrontEnd;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,10 @@ import application.antlr.PrintParserOutput;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.ListView;
@@ -41,6 +45,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
 
 
 
@@ -176,8 +181,7 @@ public void Parser(ActionEvent e) {
 
 
 public void Lexer(ActionEvent e) {
-	
-	 
+	  
 	  console.getChildren().clear();
 	  String input = codeArea.getText();
 	  
@@ -187,6 +191,28 @@ public void Lexer(ActionEvent e) {
       
       setLexicalOutput(lexer);
       
+}
+
+public void Semantic(ActionEvent e) {
+	 String input = codeArea.getText();
+	 ExprLexer lexer = new ExprLexer(CharStreams.fromString(input));
+	 List<? extends Token> token = lexer.getAllTokens();
+	 
+	 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/application/ressource/Table.fxml"));
+     Parent root = null;
+		try {
+			root = fxmlLoader.load();
+		} catch (IOException exception) {
+	
+			exception.printStackTrace();
+		}
+  
+     Scene scene = new Scene(root);
+     String css_tab = this.getClass().getResource("/application/ressource/tab.css").toExternalForm();
+     scene.getStylesheets().add(css_tab);
+     Stage stage = new Stage();
+     stage.setScene(scene);
+     stage.show();
 }
 
 @FXML
