@@ -8,17 +8,24 @@ grammar Expr;
 
 
 //Fragements
+fragment SIGN: '-' | '+';
 fragment LETTER: [a-zA-Z];
 fragment DIGIT: [0-9];
 fragment ALPHANUMERICAL: LETTER | DIGIT;
 fragment INLINECOMMENT: '<!-' ~[\n]* '-!>'; 
 fragment MULTILINECOMMENT: '{--' .*? '--}';
-
+fragment INTEGER: DIGIT+;
+fragment FLOATED: DIGIT+'.'DIGIT+ | '.'DIGIT+ | DIGIT+'.';
 
 //Tokens
+BOOLEANVALUE: 'True'   {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");} | 'False'    {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");}; 
 INPUT: 'input'   {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Read Function");}; 
 OUTPUT: 'output' {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Print Function");};
-TYPE: 'Int' | 'Float'| 'Bool' | 'String' | 'Char'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");};
+TYPE: 'Int'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");}| 
+      'Float'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");}|
+       'Bool' {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");} | 
+       'String'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");} | 
+       'Char'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");};
 MAIN: 'MainPrgm'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainProgram Header");};
 VAR: 'Var'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Block Delimiter");};
 BEGIN: 'BeginPg'  {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");};
@@ -45,10 +52,12 @@ CONST: 'Const' {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant
 
 IDF: LETTER+ (ALPHANUMERICAL+('_'ALPHANUMERICAL+)*)*;
 
-INT: DIGIT+; 
-FLOAT: DIGIT+'.'DIGIT+ | '.'DIGIT+ | DIGIT+'.' ;
-STRING: '"'~["\n]*'"';
-CHAR: '\''~['\n]?'\'';
+INT: INTEGER  {Constant_Hashtable.ConstantTable.insertTable(getText(),"int",getLine(),getCharPositionInLine());}|
+    '('SIGN INTEGER')' {Constant_Hashtable.ConstantTable.insertTable(getText(),"int",getLine(),getCharPositionInLine());}; 
+FLOAT: FLOATED  {Constant_Hashtable.ConstantTable.insertTable(getText(),"float",getLine(),getCharPositionInLine());} |
+       '('SIGN FLOAT')' {Constant_Hashtable.ConstantTable.insertTable(getText(),"float",getLine(),getCharPositionInLine());};
+STRING: '"'~["\n]*'"' {Constant_Hashtable.ConstantTable.insertTable(getText(),"string",getLine(),getCharPositionInLine());};
+CHAR: '\''~['\n]*'\'' {Constant_Hashtable.ConstantTable.insertTable(getText(),"char",getLine(),getCharPositionInLine());};
 
 AFFECT: ':=';
 NOT: '!';
@@ -83,35 +92,33 @@ prog:	  COMMENT* MAIN IDF ';' COMMENT*  varBlock COMMENT*  mainCode  COMMENT* EO
 varBlock: VAR declaration+ | VAR;
 declaration:  normalDeclaration  | arrayDeclaration | COMMENT;
 listIDF: IDF(','IDF)*;
-normalDeclaration:  declarationKeyword listIDF ':' TYPE '=' affectValue ';' | declarationKeyword listIDF ':' TYPE ';'; 
-sign  : '+' | '-';
+normalDeclaration:  declarationKeyword listIDF ':' TYPE '=' value ';' | declarationKeyword listIDF ':' TYPE ';'; 
 affectValue returns [String type] :   number {$type = $number.type;} | STRING {$type = "STRING";} | CHAR {$type = "CHAR";} ; 
-number returns [String type] : '(' sign INT ')'{ $type = "INT"; } | '(' sign FLOAT ')' { $type = "FLOAT"; } | INT { $type = "INT"; }  | FLOAT { $type = "FLOAT"; }  ;
+number returns [String type] : INT { $type = "INT"; } |  FLOAT  { $type = "FLOAT"; }   ;
 arrayDeclaration: declarationKeyword listIDF ':' '[' TYPE ';' INT ']' affectArray ';' | declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' ;
-affectArray:  '=' '{' listNumber '}';
+affectArray:  '=' '{' listValue* '}';
 declarationKeyword : DEFINE CONST | LET;
-listNumber : number (',' number)*;
+listValue : value (',' value)*;
+value: number| BOOLEANVALUE | CHAR | STRING | var | condition | arithmeticExpression | concatInst;
 mainCode: BEGIN  COMMENT* '{' inst+ '}' COMMENT* END ';'| BEGIN  COMMENT* '{' '}' COMMENT* END ';';
-inst: output | input | affectInst |COMMENT | forInst | doWhileInst |whileInst | ifInst | switchInst;
-input:  id=INPUT '('  listIDF ')' ';';
-output: id=OUTPUT '(' content ')' ';';
+inst: output | input | affectInst |COMMENT| doWhileInst |whileInst | ifInst | switchInst;
+input:  INPUT '('  listIDF ')' ';';
+output: OUTPUT '(' content ')' ';';
 content: ((STRING|IDF) ',')+ (STRING|IDF) |(STRING|IDF);
-affectInst: var AFFECT arithmeticExpression ';';
-arithmeticExpression: arithmeticExpression operation arithmeticExpression  | '(' arithmeticExpression ')' | operator;
-operator: number | var;
+affectInst: var AFFECT arithmeticExpression ';'| var AFFECT concatInst ';' | var AFFECT '{' listValue* '}' ';' | var AFFECT condition ';';
+concatInst: STRING (PLUS STRING)+  | CHAR (PLUS CHAR)+;
+arithmeticExpression: arithmeticExpression (MUL | DIV) arithmeticExpression  | arithmeticExpression (PLUS| SUB) arithmeticExpression |  operator |'(' arithmeticExpression ')' ;
+operator: number | var; 
 var: IDF| IDF '[' INT ']';
-operation: '+' | '-' | '*' | '/';
-forInst: FOR IDF(operation arithmeticExpression)? FROM arithmeticExpression TO arithmeticExpression STEP arithmeticExpression '{' inst+ '}';
+forInst: FOR IDF((MUL | DIV) arithmeticExpression  | (PLUS| SUB) arithmeticExpression)? FROM arithmeticExpression TO arithmeticExpression STEP arithmeticExpression '{' inst+ '}';
 doWhileInst: DO '{' inst+ '}' WHILE '(' condition ')' ';';
-
 whileInst:  WHILE '(' condition ')' DO '{' inst+ '}';
-ifInst: IF '(' condition ')' THEN '{' inst+ '}' elseIfInst? elseInst?;
+ifInst: IF LPAR condition RPAR THEN '{' inst+ '}' elseIfInst? elseInst?;
 elseIfInst: COMMENT* ELSIF '(' condition ')' THEN '{' inst+ '}' elseIfInst | COMMENT* ELSIF '(' condition ')' THEN '{' inst+ '}' ;
 elseInst: COMMENT* ELSE '{' inst+ '}' ;
 switchInst: SWITCH '(' IDF ')' '{' caseInst '}';
 caseInst: CASE number ':' inst+ BREAK ';' defaultInst | CASE number ':' inst+ BREAK ';' caseInst;
 defaultInst: DEFAULT ':' inst+ BREAK ';';
-condition: '(' condition ')' | '!' '(' condition ')' | condition logicalOperator condition | partCondition;
-partCondition: IDF comparaisonOperator arithmeticExpression;
+condition:   LPAR condition RPAR| NOT condition | condition AND condition| condition OR condition| partCondition| IDF | BOOLEANVALUE ;
+partCondition: var comparaisonOperator arithmeticExpression;
 comparaisonOperator: EQ|NEQ|GREATER|LESSER|GEQ|LEQ;
-logicalOperator: AND  | OR | NOT; 

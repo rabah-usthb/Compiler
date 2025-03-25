@@ -1,23 +1,30 @@
-MainPrgm L3_jjjjjjjh
+MainPrgm L3_jjjjj;
  
 Var
 <!-Partie declaration-!>
- 
-BegiPg
+ let x : String = "sss"+"s;"+"s";
+ let y : String = x;
+ let ss_2 : Int = (222+22) * 2 / 0;
+
+BeginPg
 {
  {-- Partie Instruction 
   mulit line--}
 
-  Ouput("hello world im dying");
-  Float nb = (-3.14);
+  output("hello world im dying");
  
- 
+ b:= A OR C AND E;
 
-  Float n1 = .21;
-  Float n2 = 21.;
-  Int c = 021;
-  Int a = 3322w3 ;
-  Int b = -302;
+ b:= A AND C AND B;
+
+
+ a:= !b OR (c AND !p);
+
+ a := a - b - c;
+ a  := (a - b) * c / 2;
+
+a := !b AND !(b);
+a[1] :=  !b AND True AND ( !(a < 100) OR False );
   
 }
 EndPg ;
