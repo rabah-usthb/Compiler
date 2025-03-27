@@ -39,7 +39,8 @@
 }
 
 
-.styled-text-area .text.type {
+.styled-text-area .text.type ,.styled-text-area .text.true,
+.styled-text-area .text.false{
     -fx-fill: #27cb92;
 }
 

@@ -2,7 +2,8 @@ package application.antlr;
 
 // Generated from Expr.g4 by ANTLR 4.7.2
 
-
+  import java.util.HashMap;
+  import java.util.Map;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -62,16 +63,6 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitNormalDeclaration(ExprParser.NormalDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ExprParser#sign}.
-	 * @param ctx the parse tree
-	 */
-	void enterSign(ExprParser.SignContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ExprParser#sign}.
-	 * @param ctx the parse tree
-	 */
-	void exitSign(ExprParser.SignContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ExprParser#affectValue}.
 	 * @param ctx the parse tree
 	 */
@@ -122,15 +113,25 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitDeclarationKeyword(ExprParser.DeclarationKeywordContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ExprParser#listNumber}.
+	 * Enter a parse tree produced by {@link ExprParser#listValue}.
 	 * @param ctx the parse tree
 	 */
-	void enterListNumber(ExprParser.ListNumberContext ctx);
+	void enterListValue(ExprParser.ListValueContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ExprParser#listNumber}.
+	 * Exit a parse tree produced by {@link ExprParser#listValue}.
 	 * @param ctx the parse tree
 	 */
-	void exitListNumber(ExprParser.ListNumberContext ctx);
+	void exitListValue(ExprParser.ListValueContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#value}.
+	 * @param ctx the parse tree
+	 */
+	void enterValue(ExprParser.ValueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#value}.
+	 * @param ctx the parse tree
+	 */
+	void exitValue(ExprParser.ValueContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ExprParser#mainCode}.
 	 * @param ctx the parse tree
@@ -192,6 +193,16 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitAffectInst(ExprParser.AffectInstContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ExprParser#concatInst}.
+	 * @param ctx the parse tree
+	 */
+	void enterConcatInst(ExprParser.ConcatInstContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#concatInst}.
+	 * @param ctx the parse tree
+	 */
+	void exitConcatInst(ExprParser.ConcatInstContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ExprParser#arithmeticExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -221,16 +232,6 @@ public interface ExprListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVar(ExprParser.VarContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ExprParser#operation}.
-	 * @param ctx the parse tree
-	 */
-	void enterOperation(ExprParser.OperationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ExprParser#operation}.
-	 * @param ctx the parse tree
-	 */
-	void exitOperation(ExprParser.OperationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ExprParser#forInst}.
 	 * @param ctx the parse tree
@@ -351,14 +352,4 @@ public interface ExprListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitComparaisonOperator(ExprParser.ComparaisonOperatorContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ExprParser#logicalOperator}.
-	 * @param ctx the parse tree
-	 */
-	void enterLogicalOperator(ExprParser.LogicalOperatorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ExprParser#logicalOperator}.
-	 * @param ctx the parse tree
-	 */
-	void exitLogicalOperator(ExprParser.LogicalOperatorContext ctx);
 }

@@ -1,0 +1,20 @@
+MainPrgm test;
+
+Var
+let x : Int;
+let oop : String = x. "sss" . '\';
+let str : Bool;
+let bo: Bool =  str AND x >= (21-221.1);
+let Array: [Int ; 2] = {};
+@define Const p : Int =  str[9] * (0);
+let x,y,x : Int = 2221.;
+let x : Bool = True;
+let lol : [Int ; 0] = {11,22,11};
+let lol_2: [String; 4] = {"heyy","x"."x",22};
+let ar : [String;4] = {"ss",'x'.'x',"w"};
+let a : [Char ; 5] = {};
+
+BeginPg {
+
+ }
+EndPg;

@@ -24,6 +24,10 @@ import application.antlr.ExprLexer;
 import application.antlr.ExprParser;
 import application.antlr.PrintLexerOutput;
 import application.antlr.PrintParserOutput;
+import application.antlr.SymboleTable.Constant_Hashtable;
+import application.antlr.SymboleTable.IDF_HashTable;
+import application.antlr.SymboleTable.Keywords_Hashtable;
+import application.antlr.validate.validateConstant;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -194,10 +198,30 @@ public void Lexer(ActionEvent e) {
 }
 
 public void Semantic(ActionEvent e) {
-	 String input = codeArea.getText();
-	 ExprLexer lexer = new ExprLexer(CharStreams.fromString(input));
-	 List<? extends Token> token = lexer.getAllTokens();
 	 
+	 console.getChildren().clear();
+	 String input = codeArea.getText();
+	 
+	 Keywords_Hashtable.KeywordsTable.KeywordsHashMap.clear();
+	 Constant_Hashtable.ConstantTable.ConstantHashMap.clear();
+	 IDF_HashTable.table.IDF_Map.clear();
+	 
+	 ExprLexer lexer_1 = new ExprLexer(CharStreams.fromString(input));
+	// lexer_1.removeErrorListeners();
+	 
+	 CommonTokenStream tokens = new CommonTokenStream(lexer_1);
+	 tokens.fill();
+	 
+	 ExprParser parser = new  ExprParser(tokens);
+  /*   parser.removeErrorListeners();
+     
+      PrintParserOutput listener = new PrintParserOutput();
+      parser.addErrorListener(listener);
+
+      setParserOutput(listener);
+    */  
+      ParseTree tree = parser.prog();
+      
 	 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/application/ressource/Table.fxml"));
      Parent root = null;
 		try {
@@ -209,6 +233,8 @@ public void Semantic(ActionEvent e) {
   
      Scene scene = new Scene(root);
      String css_tab = this.getClass().getResource("/application/ressource/tab.css").toExternalForm();
+     String css_table = this.getClass().getResource("/application/ressource/table.css").toExternalForm();
+     scene.getStylesheets().add(css_table);
      scene.getStylesheets().add(css_tab);
      Stage stage = new Stage();
      stage.setScene(scene);

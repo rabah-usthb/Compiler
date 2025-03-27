@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.antlr.v4.runtime.Token;
 
+import application.antlr.validate.validateConstant;
+import application.antlr.validate.validateIDF;
+
 public class PrintLexerOutput {
 	
 	List<? extends Token> listToken;
@@ -32,7 +35,14 @@ public class PrintLexerOutput {
 				printToken(text,"Keyword", x, y);
 			}
 			else if (isIDF(type)) {
-			 validateIDFToken(text, x, y);
+				if (validateIDF.validateIDFToken(text)) {
+					 printToken(text,"Identifier",x,y);
+				}
+				else {
+				  output.append("Error: Identifier "+ text + " exceeds maximum length of " + 14 + " At line "+ x+" Column "+y+"\n");
+				  this.nb++;
+				}
+			
 			}
 			else if (isComment(type)) {
 				printToken(text,"Comment",x,y);
@@ -41,12 +51,15 @@ public class PrintLexerOutput {
 				printToken(text,"Separator",x,y);
 			}
 			else if(isConst(type)) {
-				if(type.equals("int")) {
-				validateIntToken(text, x, y);	
-				}
-				else {
-				printToken(text,type.toLowerCase()+"Constant",x,y);
-				}
+			  if(validateConstant.validateConst(text, type)) {
+				  printToken(text,type+" Constant",x,y);
+			  }
+				  else { 
+			    	 output.append(validateConstant.getError(text, type, x, y)+"\n");
+						this.nb++;
+			    }
+			  
+				
 			}
 			else if(isUndefined(type)) {
 				output.append("Undefined Token "+text+" at line " + x + ", column " + y+"\n");
@@ -106,40 +119,6 @@ public class PrintLexerOutput {
 	    output.append("Matched "+type+": "+token+" at line " + line + ", column " + column+"\n");
 	 }
 	
-	  public void validateIntToken(String token , int line , int column){
-		    long value = 0;  	  
-		    
-		    try {
-		    value = Long.parseLong(token);
-		    }
-		    catch(NumberFormatException e) {
-		    	output.append("Error: Int Constant "+ token + " exceeds maximum value range of [-32768 , 32767 ] At line "+ line+" Column "+column+"\n");
-		    	this.nb++;
-		    }
-		    
-		    if(value<-32768|| value >32767 ) {
-		    	output.append("Error: Int Constant "+ token + " exceeds maximum value range of [-32768 , 32767 ] At line "+ line+" Column "+column+"\n");
-		    	this.nb++;
-		    	//System.exit(1);
-		   }
-		  else {
-		    printToken(token,"Int Constant",line,column);
-		  }
-		 }
 	
-	
-	public void validateIDFToken(String token  , int line , int column){
-	   
-	    if(token.length()>14){
-	      output.append("Error: Identifier "+ token + " exceeds maximum length of " + 14 + " At line "+ line+" Column "+column+"\n");
-	      this.nb++;
-	      //IDF_HashTable.table.updateError(token,"Identifier exceeds maximum length of " + maxLength);
-	      //System.exit(1);
-	    }
-	    else {
-	      printToken(token,"Identifier",line,column);
-	    //IDF_HashTable.table.insert(token);
-	    }
-	 }
 	
 }
