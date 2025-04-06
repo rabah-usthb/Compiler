@@ -1,11 +1,16 @@
 affect array to one dimension table             done 
 .34 332. writing                                done
-Bool type
-String type
-Char type
+Bool type                                       done
+String type                                     done
+Char type                                       done
 switch case                                     done
-while loop                                      done 
-2d matrix                                   
-matrix index > 0 , index <size
+while loop                                      done       
+matrix index > 0 , index <size                  done
 missmatch                                       done
 redefinition                                    done
+
+optimized highlight                             done
+exact column for errors
+auto-complete/code-snippet
+finish semantic
+rapport

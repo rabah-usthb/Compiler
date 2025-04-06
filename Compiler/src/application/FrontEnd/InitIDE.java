@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.*;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import application.antlr.ExprLexer;
 import application.antlr.ExprParser;
@@ -42,6 +44,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -265,33 +269,49 @@ void initialize() {
 	 codeArea.textProperty().addListener((obs, oldText, newText) -> {
 		SetSyntaxHighlight(codeArea, newText);
 	 });
-
+	 
+	 codeArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+		    if (event.isControlDown() && event.getCode() == KeyCode.V) {
+		        // This will run on Ctrl+V regardless of whether text actually changes
+		       
+		            SetSyntaxHighlight(codeArea, codeArea.getText());
+		        
+		    }
+		});
 	 
 }
 
 void SetSyntaxHighlight(CodeArea codeArea , String Text) {
-	  
+	 
+	StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
 	 //System.out.println("Text "+Text);
 	  ExprLexer lexer = new ExprLexer(CharStreams.fromString(Text));
 	  lexer.removeErrorListeners();
 	  Token token = lexer.nextToken();
+	  int lastTokenEnd = 0;
 	
 	  while (token.getType() != Token.EOF) {
-		  int tokenType = token.getType();
-//		  System.out.println("Token Type: " + tokenType+" value "+token.getText());
-		 
-		  try {
-	//		System.out.println("Symbolic Name: " + lexer.getVocabulary().getSymbolicName(tokenType));
-			String tokenName = (lexer.getVocabulary().getSymbolicName(tokenType).toLowerCase());
-	//		System.out.println(" "+token.getStartIndex()+" "+token.getStopIndex());
-			codeArea.setStyle(token.getStartIndex(), token.getStopIndex() + 1,Collections.singleton(tokenName));
-			
-		  } catch (NullPointerException e) {
-			System.out.println("nothing");
-		  }
-		 
-		 token = lexer.nextToken();
-	  }
+	       int tokenStart = token.getStartIndex();
+	       int tokenEnd = token.getStopIndex() + 1;
+	        
+	        // Add unstyled span between the last token and this token
+	        spansBuilder.add(Collections.emptyList(), tokenStart - lastTokenEnd);
+	        
+	        // Get the token name (e.g., "keyword", "string") as the style class
+	        String tokenName = lexer.getVocabulary().getSymbolicName(token.getType()).toLowerCase();
+	        spansBuilder.add(Collections.singleton(tokenName), tokenEnd - tokenStart);
+	        
+	        token = lexer.nextToken();
+	        lastTokenEnd = tokenEnd;
+	    }
+	    
+	    
+	    // Add unstyled span for any remaining text after the last token
+	    spansBuilder.add(Collections.emptyList(), Text.length() - lastTokenEnd);
+	    
+	    // Apply all spans in one go
+	    codeArea.setStyleSpans(0, spansBuilder.create());
+	}
 }
 
-}
+

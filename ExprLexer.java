@@ -108,9 +108,12 @@ public class ExprLexer extends Lexer {
 	}
 
 
-	   public static final LinkedHashSet<String> types = new LinkedHashSet<>();
-	   public static final LinkedHashSet<String> boolTypes = new LinkedHashSet<>();
-	   public static final LinkedHashSet<String> comTypes = new LinkedHashSet<>();
+	   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+	   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+	   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+	   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+	   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+	   public static final ArrayList<String> valueList  = new ArrayList<>();
 
 
 	public ExprLexer(CharStream input) {

@@ -61,16 +61,6 @@ public interface ExprListener extends ParseTreeListener {
 	 */
 	void exitNormalDeclaration(ExprParser.NormalDeclarationContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ExprParser#affectValue}.
-	 * @param ctx the parse tree
-	 */
-	void enterAffectValue(ExprParser.AffectValueContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ExprParser#affectValue}.
-	 * @param ctx the parse tree
-	 */
-	void exitAffectValue(ExprParser.AffectValueContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ExprParser#number}.
 	 * @param ctx the parse tree
 	 */

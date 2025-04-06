@@ -2,6 +2,10 @@ package application.antlr.validate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.TreeSet;
+
+import application.antlr.SymboleTable.ErrorToken;
 
 public class validateIDF {
 
@@ -13,9 +17,15 @@ public class validateIDF {
 	public static final int maxSize = 14;
 	
 	
-	public static boolean isDividingByZero(String expression) {
-		expression = expression.replace(" ", "");
-		return expression.contains("/0");
+	
+	
+	public static ErrorToken isDividingByZero(ArrayList<ErrorToken> arithmeticList,String operator,int line, int col) {
+		operator = operator.replace("(", "").replace(")", "");
+		if(operator.equals("0") || operator.equals("-0") || operator.equals("+0")) {
+			arithmeticList.add(new ErrorToken(operator, "DIV BY 0", line, col));
+			return new ErrorToken(operator, "DIV BY 0", line, col);
+		}
+		return null;
 	}
 	
 	public static String getSameArray(ArrayList<String> listValue) {
@@ -119,7 +129,13 @@ public class validateIDF {
 	}
 	
 	
-	public static boolean isSameType(HashSet<String> typeSet) {
+	public static boolean isSameType(ArrayList<ErrorToken> types) {
+		
+		HashSet<String> typeSet = new LinkedHashSet<>();
+		
+		for(ErrorToken token : types) {
+			typeSet.add(token.type);
+		}
 		
 		if(typeSet.size()==1) {
 			return true;
@@ -152,8 +168,50 @@ public class validateIDF {
 		
 	}
 	
-	public static String getValueError (String value , int line , int column) {
-		return "Error: Value "+ value + " Not Properly Defined "+ line +" Column "+column;
+	public static String getError(String exp , String token, String IDF , int line_idf, int col_idf ,String size ,String type, int line , int col) {
+	
+		
+		switch(type) {
+			case "Not Defined":
+				return getUndefinedError(exp, token, line, col);
+			case "Not Array":
+				return getNotArrayError(token, line, col);
+			case "Array":
+				return getArrayError(token,line,col);
+			case "Out Of Bound":
+				return getBoundError(size, token, line, col);
+			case "DIV BY 0":
+				return getDivError(exp, line, col);
+			case "EXP":
+				return getValueError(type, token, line, col);
+			case "Missmatch":
+				return getMissmatchError(IDF, line_idf, col_idf);
+			default:
+				return "";
+		}
+		
+	}
+	
+	public static String getBoundError(String size,String token, int line , int column) {
+		return "Error: Trying To Index "+size+" Array "+token+" Out Of Bound At"+ line +" Column "+column;
+	}
+	
+	
+	public static String getArrayError(String token, int line , int column) {
+		return "Error: Trying To Use Array Variable"+token+" At"+ line +" Column "+column;
+	}
+	
+	public static String getNotArrayError(String token, int line , int column) {
+		return "Error: Trying To Index On Non Array Variable"+token+" At"+ line +" Column "+column;
+	}
+	
+	
+	public static String getUndefinedError(String exp , String token, int line , int column) {
+		return "Error: Expression "+ exp + " Uses Undefined Variable "+token+" At"+ line +" Column "+column;
+	}
+	
+	public static String getValueError (String value , String token,int line , int column) {
+		return "Error: Expression "+ value + " Not Properly Defined For The Token "+token+" At"+ line +" Column "+column;
 	}
 	
 	public static String getNotSameTypeError (String token , int line , int column) {
@@ -176,8 +234,8 @@ public class validateIDF {
 		return "Error: Identifier "+ token + " exceeds maximum length of " + maxSize + " At line "+ line +" Column "+column;
 	}
 	
-	public static String getDivError (String value,int line , int column) {
-		return "Error: value "+value+ " dividing by 0  At line "+ line +" Column "+column;
+	public static String getDivError (String exp,int line , int column) {
+		return "Error: Expression "+exp+ " dividing by 0 At line "+ line +" Column "+column;
 	}
 	
 	public static boolean validateIDFToken(String token){

@@ -18,3 +18,28 @@ BeginPg {
 
  }
 EndPg;
+
+
+
+
+MainPrgm test;
+
+Var
+let x : Int;
+let oop : String = x. "sss" . '\';
+let str : Bool;
+let bo: Bool =  str AND x >= (21-221.1)/0;
+let Array: [Int ; 2] = {};
+@define Const p : Int =  str[9] * (0);
+let x,y,x : Int = 2221.;
+let x : Bool = True;
+
+
+BeginPg {
+
+ }
+EndPg;
+
+
+ 
+ 
