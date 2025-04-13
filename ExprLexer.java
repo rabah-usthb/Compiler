@@ -1,7 +1,11 @@
 // Generated from Expr.g4 by ANTLR 4.7.2
 
+  package application.antlr;
   import java.util.HashMap;
   import java.util.Map;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

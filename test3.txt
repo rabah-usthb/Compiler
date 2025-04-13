@@ -41,5 +41,15 @@ BeginPg {
 EndPg;
 
 
- 
- 
+ErrorToken : a ,
+             b
+
+             a+b
+
+ a + b;
+
+a+b a est non define
+
+"cc" . 'x'
+
+a AND c >= b

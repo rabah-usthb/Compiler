@@ -1,8 +1,12 @@
 grammar Expr;
 
 @header {
+  package application.antlr;
   import java.util.HashMap;
   import java.util.Map;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
 }
 
 
@@ -12,7 +16,6 @@ grammar Expr;
    public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
    public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
    public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
-   public static final ArrayList<String> valueList  = new ArrayList<>();
 }
 
 
@@ -104,8 +107,9 @@ declaration:  normalDeclaration  | arrayDeclaration | COMMENT;
 listIDF: IDF(','IDF)*;
 normalDeclaration @init {types.clear();} :  declarationKeyword listIDF ':' TYPE '=' value ';' 
 {
+this.types.add($value.type);
     for (var idf : $listIDF.ctx.getTokens(IDF)) { 
-        IDF_HashTable.table.updateTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$value.text,$value.type.type,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+        IDF_HashTable.table.updateTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$value.text,types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
     }
 }
      | declarationKeyword listIDF ':' TYPE ';'
@@ -117,8 +121,8 @@ normalDeclaration @init {types.clear();} :  declarationKeyword listIDF ':' TYPE 
        }
      ; 
 
-number returns [ErrorToken type] : INT { $type = new ErrorToken($INT.text,"INT",$INT.line,$INT.pos,0); } |  FLOAT  { $type = new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos,0); }   ;
-arrayDeclaration: declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' '}' ';' 
+number returns [ErrorToken type] : INT { $type = new ErrorToken($INT.text,"INT",$INT.line,$INT.pos); } |  FLOAT  { $type = new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos); }   ;
+arrayDeclaration @init{types.clear();}: declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' '}' ';' 
 {
   for (var idf : $listIDF.ctx.getTokens(IDF)) { 
         IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
@@ -140,19 +144,28 @@ declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';'
 ;
 affectArray:  '=' '{' listValue* '}';
 declarationKeyword returns [String mul]: DEFINE CONST{$mul = "Constant";} | LET {$mul = "Variable";};
-listValue: v1=value {ErrorToken type = $v1.type; type.exp = $v1.text; this.types.add(type); }  (',' v=value { ErrorToken type = $v.type; type.exp = $v.text; this.types.add(type);})*;
-value returns [ErrorToken type] @init {this.boolList.clear(); this.compareList.clear(); this.concatList.clear(); this.arithmeticList.clear();} : number {$type = $number.type;}| BOOLEANVALUE {$type = new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos,0);} | CHAR {$type = new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos,0); } | STRING {$type = new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos,0);}  | condition {$type = IDF_HashTable.table.conditionType(this.boolList,this.compareList);}| arithmeticExpression {$type=IDF_HashTable.table.getType(this.arithmeticList,0);} | concatInst {$type=IDF_HashTable.table.getType(this.concatList,1);};
+listValue: v1=value {ErrorToken type_1 = $v1.type; type_1.exp = $v1.text; this.types.add(type_1); }  (',' v=value { ErrorToken type_2 = $v.type; type_2.exp = $v.text; this.types.add(type_2);})*;
+value returns [ErrorToken type] @init {this.boolList.clear(); this.compareList.clear(); this.concatList.clear(); this.arithmeticList.clear();} : var {$type= $var.type;} |number {$type = $number.type;}|  BOOLEANVALUE {$type = new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos);} | CHAR {$type = new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos); } | STRING {$type = new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos);}  | condition {$type = IDF_HashTable.table.conditionType(this.boolList,this.compareList);}| arithmeticExpression {$type=IDF_HashTable.table.getType(this.arithmeticList,0);} | concatInst {$type=IDF_HashTable.table.getType(this.concatList,1);};
 mainCode: BEGIN  COMMENT* '{' inst+ '}' COMMENT* END ';'| BEGIN  COMMENT* '{' '}' COMMENT* END ';';
 inst: output | input | affectInst |COMMENT| doWhileInst |whileInst | ifInst | switchInst;
 input:  INPUT '('  listIDF ')' ';';
 output: OUTPUT '(' content ')' ';';
 content: ((STRING|IDF) ',')+ (STRING|IDF) |(STRING|IDF);
 
-affectInst: var AFFECT arithmeticExpression ';'| var AFFECT concatInst ';' | var AFFECT '{' listValue* '}' ';' | var AFFECT condition ';';
-concatInst: (STRING  {this.sconcatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos,0););} |CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos,0););} |var {this.concatList.add($var.type);}) ( '.' ((var {this.concatList.add($var.type);}|STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos,0););}|CHAR{this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos,0););})))+   ;
-arithmeticExpression : arithmeticExpression op=(MUL | DIV) ari=arithmeticExpression  {if($op.type == DIV){validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine());}} | arithmeticExpression (PLUS| SUB) arithmeticExpression |  operator {this.arithmeticList.add($operator.type);} |'(' arithmeticExpression ')' ;
+affectInst @init{ this.types.clear(); } : var AFFECT value ';' 
+{ 
+  this.types.add($value.type);
+  var idf =  $var.ctx.getTokens(IDF).get(0);
+  IDF_HashTable.table.affectValue(idf.getText(), $value.text,$var.type,this.types, idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+}
+| IDF AFFECT '{' listValue* '}' ';' {
+  IDF_HashTable.table.affectArray($IDF.text,this.types, $IDF.line,$IDF.pos);
+
+};
+concatInst: (STRING  {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));} |CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));} |var {this.concatList.add($var.type);}) ( '.' ((var {this.concatList.add($var.type);}|STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}|CHAR{this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));})))+   ;
+arithmeticExpression returns [ErrorToken type]: arithmeticExpression op=(MUL | DIV) ari=arithmeticExpression  {if($op.type == DIV){ $type = validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine());}} | arithmeticExpression (PLUS| SUB) arithmeticExpression |  operator {this.arithmeticList.add($operator.type);} |'(' arithmeticExpression ')' ;
 operator returns [ErrorToken type]: number {$type = $number.type;} | var {$type = $var.type;}; 
-var returns [ErrroToken type]: IDF {$type = IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos); }| IDF '[' INT ']'  {$type = IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos);};
+var returns [ErrorToken type]: IDF {$type = IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos); }| IDF '[' INT ']'  {$type = IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos);};
 forInst: FOR IDF((MUL | DIV) arithmeticExpression  | (PLUS| SUB) arithmeticExpression)? FROM arithmeticExpression TO arithmeticExpression STEP arithmeticExpression '{' inst+ '}';
 doWhileInst: DO '{' inst+ '}' WHILE '(' condition ')' ';';
 whileInst:  WHILE '(' condition ')' DO '{' inst+ '}';
@@ -162,6 +175,6 @@ elseInst: COMMENT* ELSE '{' inst+ '}' ;
 switchInst: SWITCH '(' IDF ')' '{' caseInst '}';
 caseInst: CASE number ':' inst+ BREAK ';' defaultInst | CASE number ':' inst+ BREAK ';' caseInst;
 defaultInst: DEFAULT ':' inst+ BREAK ';';
-condition:   LPAR condition RPAR| NOT condition | condition AND condition| condition OR condition| partCondition| var {this.boolList.add($var.type)} | BOOLEANVALUE ;
-partCondition : var comparaisonOperator arithmeticExpression {this.compareList.add($var.type); };
+condition:   LPAR condition RPAR| NOT condition | condition AND condition| condition OR condition| partCondition| var {this.boolList.add($var.type);} | BOOLEANVALUE ;
+partCondition : var comparaisonOperator arithmeticExpression {this.compareList.add($var.type); if($arithmeticExpression.type!=null){this.compareList.add($arithmeticExpression.type);} };
 comparaisonOperator: EQ|NEQ|GREATER|LESSER|GEQ|LEQ;

@@ -134,7 +134,11 @@ public class validateIDF {
 		HashSet<String> typeSet = new LinkedHashSet<>();
 		
 		for(ErrorToken token : types) {
-			typeSet.add(token.type);
+			if(!token.dataType.isEmpty()) {
+			typeSet.add(token.dataType);
+			System.out.println("Data Type "+token.dataType);
+			}
+			
 		}
 		
 		if(typeSet.size()==1) {
@@ -147,6 +151,25 @@ public class validateIDF {
 	
 	}
 	
+	
+	public static boolean isOutOfBound(String size , String index ) {
+		 int indexValue;
+		  int sizeValue;
+		  
+		  try {
+			  sizeValue = Integer.parseInt(size);
+			  indexValue = Integer.parseInt(size); 
+			  
+			  if(indexValue<0 || indexValue>sizeValue -1 ) {
+				  return true;
+			  }
+			  
+		  }
+		  catch (NumberFormatException e) {
+			  return true;
+		  }
+		  return false;
+	}
 	
 	public static boolean isSizeCorrect(String size) {
 		size = size.replace("(", "").replace(")", "");
@@ -168,54 +191,58 @@ public class validateIDF {
 		
 	}
 	
-	public static String getError(String exp , String token, String IDF , int line_idf, int col_idf ,String size ,String type, int line , int col) {
-	
-		
-		switch(type) {
-			case "Not Defined":
-				return getUndefinedError(exp, token, line, col);
-			case "Not Array":
-				return getNotArrayError(token, line, col);
-			case "Array":
-				return getArrayError(token,line,col);
-			case "Out Of Bound":
-				return getBoundError(size, token, line, col);
-			case "DIV BY 0":
-				return getDivError(exp, line, col);
-			case "EXP":
-				return getValueError(type, token, line, col);
-			case "Missmatch":
-				return getMissmatchError(IDF, line_idf, col_idf);
-			default:
-				return "";
-		}
-		
+	public static String getManyElementError(String token,int line, int col) {
+		return "Error : To Many Element Affected To  "+token+" At Line "+line+" Column "+col;
 	}
 	
-	public static String getBoundError(String size,String token, int line , int column) {
-		return "Error: Trying To Index "+size+" Array "+token+" Out Of Bound At"+ line +" Column "+column;
+	public static String getSizeDefError(String token , String exp , int line , int col) {
+		return "Error : Using Array "+token+" With Size Not Properly Defined In "+exp+" At Line "+line+" Column "+col;
+	}
+	
+	public static String getIndexingError(String token , String index,String exp, int line ,int column) {
+		return "Error: Trying To Index Non Array Variable "+token+"["+index+"] in expression "+ exp +" At Line "+ line +" Column "+column;
+	}
+	
+	public static String getIndexingError(String token , String index, int line ,int column) {
+		return "Error: Trying To Index Non Array Variable "+token+"["+index+"]"+" At Line "+ line +" Column "+column;
 	}
 	
 	
-	public static String getArrayError(String token, int line , int column) {
-		return "Error: Trying To Use Array Variable"+token+" At"+ line +" Column "+column;
+	public static String getBoundError(String index,String token, int line , int column) {
+		return "Error: Trying To Index "+index+" Array "+token+" Out Of Bound At Line "+ line +" Column "+column;
+	}
+	
+	public static String getBoundError(String index,String token, String exp,int line , int column) {
+		return "Error: Trying To Index "+index+" Array "+token+" Out Of Bound in "+exp+" At Line "+ line +" Column "+column;
+	}
+	
+	
+	public static String getArrayError(String token,String exp, int line , int column) {
+		return "Error: Trying To Use Array "+token+" in expression "+exp+" At Line "+ line +" Column "+column;
 	}
 	
 	public static String getNotArrayError(String token, int line , int column) {
-		return "Error: Trying To Index On Non Array Variable"+token+" At"+ line +" Column "+column;
+		return "Error: Trying To Index On Non Array Variable"+token+" At Line "+ line +" Column "+column;
 	}
 	
+	public static String getConstantError(String token, int line , int column) {
+		return "Error: Trying To Affect A Second Value To A Constant Variable "+token+" At Line "+ line +" Column "+column;
+	}
+	
+	public static String getUndefinedError(String token, int line , int column) {
+		return "Error: Trying To Affect Value To Undefined Variable "+token+" At Line "+ line +" Column "+column;
+	}
 	
 	public static String getUndefinedError(String exp , String token, int line , int column) {
-		return "Error: Expression "+ exp + " Uses Undefined Variable "+token+" At"+ line +" Column "+column;
+		return "Error: Expression "+ exp + " Uses Undefined Variable "+token+" At Line "+ line +" Column "+column;
 	}
 	
 	public static String getValueError (String value , String token,int line , int column) {
-		return "Error: Expression "+ value + " Not Properly Defined For The Token "+token+" At"+ line +" Column "+column;
+		return "Error: Expression "+ value + " Not Properly Defined For The Token "+token+" At Line "+ line +" Column "+column;
 	}
 	
 	public static String getNotSameTypeError (String token , int line , int column) {
-		return "Error: Array "+ token + " has element of different type  at line "+ line +" Column "+column;
+		return "Error: Array "+ token + " has element of different type  at Line "+ line +" Column "+column;
 	}
 	
 	public static String getsizeError (String token, String size , int line , int column) {

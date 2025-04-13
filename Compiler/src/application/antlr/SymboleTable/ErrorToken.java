@@ -1,5 +1,6 @@
 package application.antlr.SymboleTable;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class ErrorToken {
@@ -7,6 +8,7 @@ public class ErrorToken {
  public int col;
  public int line;
  public String size;
+ public String dataType="";
  public String type = "";
  public String exp;
  
@@ -15,7 +17,10 @@ public class ErrorToken {
 	 this.col = col;
 	 this.line = line;
 	 this.name  = name;
-	 this.type = type;
+	 this.type =  type;
+	 if(IDF_HashTable.table.IDF_Map.get(name) !=null) {
+		 this.dataType = IDF_HashTable.table.IDF_Map.get(name).dataType.toString().split("\n")[0];
+		 }
  }
  
  
@@ -23,7 +28,10 @@ public class ErrorToken {
 	 this.col = col;
 	 this.line = line;
 	 this.name  = name;
-	 this.type = type;
+	 if(IDF_HashTable.table.IDF_Map.get(name) !=null) {
+	 this.dataType = IDF_HashTable.table.IDF_Map.get(name).dataType.toString().split("\n")[0];
+	 }
+	 this.type =type;
  }
  
 
@@ -34,6 +42,17 @@ public class ErrorToken {
 	 this.line = line;
 	 this.name= name;
  }
+ 
+ public static void printCollection(ArrayList<ErrorToken> list) {
+	 for(ErrorToken token : list) {
+		 System.out.println(token);
+	 }
+ }
+	 
+@Override
+public String toString() {
+	return "\nname "+this.name+" type "+this.type;
+}
  
  
 }
