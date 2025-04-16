@@ -94,6 +94,15 @@ public class validateIDF {
 		
 	}
 	
+	public static String getDefaultArray(String type , String size) {
+		size = size.replace("(", "").replace(")", "");
+		int len = Integer.parseInt(size);
+		
+		return "{"+ (getDefault(type)+" , ").repeat(len-1)+getDefault(type)+" }";
+		
+	}
+	
+	
 	public static String getDefault(String type) {
 		if(type.equalsIgnoreCase("int") ||type.equalsIgnoreCase("float")) {
 			return intFloatDefault;
@@ -152,13 +161,28 @@ public class validateIDF {
 	}
 	
 	
+	public static boolean isAffectSmaller(String size_1 , String size_2) {
+		 int size_2Value;
+		 int size_1Value; 
+		 
+		 System.out.println("SIZE_1 "+size_1+" SIZE_2 "+size_2);
+		 
+		 size_1Value = Integer.parseInt(size_1);
+		 size_2Value = Integer.parseInt(size_2); 
+		 
+		 return size_1Value<size_2Value;
+			  
+	}
+	
+	
 	public static boolean isOutOfBound(String size , String index ) {
+	
 		 int indexValue;
-		  int sizeValue;
+		 int sizeValue;
 		  
 		  try {
 			  sizeValue = Integer.parseInt(size);
-			  indexValue = Integer.parseInt(size); 
+			  indexValue = Integer.parseInt(index); 
 			  
 			  if(indexValue<0 || indexValue>sizeValue -1 ) {
 				  return true;
@@ -189,6 +213,18 @@ public class validateIDF {
 			return true;
 		}
 		
+	}
+	
+	public static String getArrayAffect(String token,int line, int col) {
+		return "Error : Trying To Affect Non Array Value To Array Variable "+token+" At Line "+line+" Column "+col;
+	}
+	
+	public static String getGreaterArray(String token,String vect,int line, int col) {
+		return "Error : Trying To Affect Array "+vect+" Of Greater Size To Array "+token+" At Line "+line+" Column "+col;
+	}
+	
+	public static String getNotArrayAffect(String token,int line, int col) {
+		return "Error : Trying To Affect Array To Non Array Variable "+token+" At Line "+line+" Column "+col;
 	}
 	
 	public static String getManyElementError(String token,int line, int col) {
@@ -245,6 +281,11 @@ public class validateIDF {
 		return "Error: Array "+ token + " has element of different type  at Line "+ line +" Column "+column;
 	}
 	
+	public static String getsizeError (String token , int line , int column) {
+		return "Error: Trying To Affect Value To Array "+ token + " with undefined size at line "+ line +" Column "+column;
+	}
+	
+	
 	public static String getsizeError (String token, String size , int line , int column) {
 		return "Error: Array "+ token + " has size "+size+" out of bound [ 1 ,"+validateConstant.maxInt+"] at line "+ line +" Column "+column;
 	}
@@ -257,7 +298,7 @@ public class validateIDF {
 		return "Error: Identifier "+ token + " redefined at line "+ line +" Column "+column;
 	}
 
-	public static String getSizeError (String token , int line , int column) {
+	public static String getIDFLenError (String token , int line , int column) {
 		return "Error: Identifier "+ token + " exceeds maximum length of " + maxSize + " At line "+ line +" Column "+column;
 	}
 	

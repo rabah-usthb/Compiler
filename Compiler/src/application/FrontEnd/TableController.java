@@ -35,6 +35,8 @@ public class TableController {
 	
 	
 	public void setIDFTable() {
+		
+		
         TableView<IDFEntry> idfTable  = new TableView<TableController.IDFEntry>();
 		
 		TableColumn<IDFEntry, String> valueColumn = new TableColumn<TableController.IDFEntry, String>("Value");
@@ -65,7 +67,10 @@ public class TableController {
 		
 		
 		 for (Map.Entry<String, IDF_Attributs> entry : IDF_HashTable.table.IDF_Map.entrySet()) {
-	         IDF_Attributs data = entry.getValue();
+			 IDF_Attributs data = entry.getValue();
+			 
+			 System.out.println("NAME DATA "+entry.getKey()+" VALUEEE "+data.value.toString());
+			 
 			 idfTable.getItems().add(new IDFEntry(entry.getKey(), data.mutalability.toString(),data.dataType.toString(),data.size.toString(),data.value.toString(),data.error.toString()));
 	     }
 

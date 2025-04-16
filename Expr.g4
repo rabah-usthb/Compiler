@@ -24,12 +24,15 @@ fragment SIGN: '-' | '+';
 fragment LETTER: [a-zA-Z];
 fragment DIGIT: [0-9];
 fragment ALPHANUMERICAL: LETTER | DIGIT;
-fragment INLINECOMMENT: '<!-' ~[\n]* '-!>'; 
-fragment MULTILINECOMMENT: '{--' .*? '--}';
 fragment INTEGER: DIGIT+;
 fragment FLOATED: DIGIT+'.'DIGIT+ | '.'DIGIT+ | DIGIT+'.';
+fragment INLINECOMMENT: '<!-' ~[\n]* '-!>'; 
+fragment MULTILINECOMMENT: '{--' .*? '--}';
+
 
 //Tokens
+
+
 BOOLEANVALUE: 'True'   {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");} | 'False'    {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");}; 
 INPUT: 'input'   {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Read Function");}; 
 OUTPUT: 'output' {Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Print Function");};
@@ -95,15 +98,16 @@ RPAR: ')';
 ASSIGN: '=';
 TWOPOINT: ':';
 
-COMMENT: MULTILINECOMMENT|INLINECOMMENT;
+COMMENT: (MULTILINECOMMENT|INLINECOMMENT) ->channel(HIDDEN);
 WS : [ \t\r\n]+ -> skip;
+
 ERROR_TOKEN: .;
 
 
 //Production Rules
-prog:	  COMMENT* MAIN IDF ';' COMMENT*  varBlock COMMENT*  mainCode  COMMENT* EOF;
+prog:	    MAIN IDF ';'    varBlock    mainCode    EOF;
 varBlock: VAR declaration+ | VAR;
-declaration:  normalDeclaration  | arrayDeclaration | COMMENT;
+declaration:  normalDeclaration  | arrayDeclaration;
 listIDF: IDF(','IDF)*;
 normalDeclaration @init {types.clear();} :  declarationKeyword listIDF ':' TYPE '=' value ';' 
 {
@@ -146,35 +150,44 @@ affectArray:  '=' '{' listValue* '}';
 declarationKeyword returns [String mul]: DEFINE CONST{$mul = "Constant";} | LET {$mul = "Variable";};
 listValue: v1=value {ErrorToken type_1 = $v1.type; type_1.exp = $v1.text; this.types.add(type_1); }  (',' v=value { ErrorToken type_2 = $v.type; type_2.exp = $v.text; this.types.add(type_2);})*;
 value returns [ErrorToken type] @init {this.boolList.clear(); this.compareList.clear(); this.concatList.clear(); this.arithmeticList.clear();} : var {$type= $var.type;} |number {$type = $number.type;}|  BOOLEANVALUE {$type = new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos);} | CHAR {$type = new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos); } | STRING {$type = new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos);}  | condition {$type = IDF_HashTable.table.conditionType(this.boolList,this.compareList);}| arithmeticExpression {$type=IDF_HashTable.table.getType(this.arithmeticList,0);} | concatInst {$type=IDF_HashTable.table.getType(this.concatList,1);};
-mainCode: BEGIN  COMMENT* '{' inst+ '}' COMMENT* END ';'| BEGIN  COMMENT* '{' '}' COMMENT* END ';';
-inst: output | input | affectInst |COMMENT| doWhileInst |whileInst | ifInst | switchInst;
+mainCode: BEGIN    '{' inst+ '}'   END ';'| BEGIN    '{' '}'   END ';';
+inst: output | input | affectInst | doWhileInst |whileInst | ifInst | switchInst;
 input:  INPUT '('  listIDF ')' ';';
 output: OUTPUT '(' content ')' ';';
 content: ((STRING|IDF) ',')+ (STRING|IDF) |(STRING|IDF);
 
-affectInst @init{ this.types.clear(); } : var AFFECT value ';' 
+affectInst @init{ this.types.clear(); } : var_1 = var AFFECT var_2= var ';' 
 { 
-  this.types.add($value.type);
-  var idf =  $var.ctx.getTokens(IDF).get(0);
-  IDF_HashTable.table.affectValue(idf.getText(), $value.text,$var.type,this.types, idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  IDF_HashTable.table.affectMONO($var_2.text,$var_1.type, $var_2.type,$var_1.start.getLine(),$var_1.start.getCharPositionInLine());
 }
-| IDF AFFECT '{' listValue* '}' ';' {
-  IDF_HashTable.table.affectArray($IDF.text,this.types, $IDF.line,$IDF.pos);
+| var AFFECT value ';'
+{
+ 	IDF_HashTable.table.affectEXP($value.text,$var.type, $value.type,$var.start.getLine(),$var.start.getCharPositionInLine());
+	
+}
 
+| IDF AFFECT '{' listValue+ '}' ';' {
+  IDF_HashTable.table.affectArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos),this.types, $IDF.line,$IDF.pos);
+}
+
+| IDF AFFECT '{''}' ';' {
+  IDF_HashTable.table.affectEmptyArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos), $IDF.line,$IDF.pos);
 };
+
+
 concatInst: (STRING  {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));} |CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));} |var {this.concatList.add($var.type);}) ( '.' ((var {this.concatList.add($var.type);}|STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}|CHAR{this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));})))+   ;
-arithmeticExpression returns [ErrorToken type]: arithmeticExpression op=(MUL | DIV) ari=arithmeticExpression  {if($op.type == DIV){ $type = validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine());}} | arithmeticExpression (PLUS| SUB) arithmeticExpression |  operator {this.arithmeticList.add($operator.type);} |'(' arithmeticExpression ')' ;
+arithmeticExpression : arithmeticExpression op=(MUL | DIV) ari=arithmeticExpression  {if($op.type == DIV){ this.arithmeticList.add(validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine()));}} | arithmeticExpression (PLUS| SUB) arithmeticExpression |  operator {this.arithmeticList.add($operator.type);} |'(' arithmeticExpression ')' ;
 operator returns [ErrorToken type]: number {$type = $number.type;} | var {$type = $var.type;}; 
 var returns [ErrorToken type]: IDF {$type = IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos); }| IDF '[' INT ']'  {$type = IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos);};
 forInst: FOR IDF((MUL | DIV) arithmeticExpression  | (PLUS| SUB) arithmeticExpression)? FROM arithmeticExpression TO arithmeticExpression STEP arithmeticExpression '{' inst+ '}';
 doWhileInst: DO '{' inst+ '}' WHILE '(' condition ')' ';';
 whileInst:  WHILE '(' condition ')' DO '{' inst+ '}';
 ifInst: IF LPAR condition RPAR THEN '{' inst+ '}' elseIfInst? elseInst?;
-elseIfInst: COMMENT* ELSIF '(' condition ')' THEN '{' inst+ '}' elseIfInst | COMMENT* ELSIF '(' condition ')' THEN '{' inst+ '}' ;
-elseInst: COMMENT* ELSE '{' inst+ '}' ;
+elseIfInst:   ELSIF '(' condition ')' THEN '{' inst+ '}' elseIfInst |   ELSIF '(' condition ')' THEN '{' inst+ '}' ;
+elseInst:   ELSE '{' inst+ '}' ;
 switchInst: SWITCH '(' IDF ')' '{' caseInst '}';
 caseInst: CASE number ':' inst+ BREAK ';' defaultInst | CASE number ':' inst+ BREAK ';' caseInst;
 defaultInst: DEFAULT ':' inst+ BREAK ';';
 condition:   LPAR condition RPAR| NOT condition | condition AND condition| condition OR condition| partCondition| var {this.boolList.add($var.type);} | BOOLEANVALUE ;
-partCondition : var comparaisonOperator arithmeticExpression {this.compareList.add($var.type); if($arithmeticExpression.type!=null){this.compareList.add($arithmeticExpression.type);} };
+partCondition :  arithmeticExpression comparaisonOperator  arithmeticExpression {this.compareList.addAll(this.arithmeticList); };
 comparaisonOperator: EQ|NEQ|GREATER|LESSER|GEQ|LEQ;

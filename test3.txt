@@ -41,6 +41,31 @@ BeginPg {
 EndPg;
 
 
+MainPrgm test;
+
+Var
+let x : Int;
+let z: Float;
+let oop : String = x. "sss" . '\';
+let str : Bool;
+let bo: Bool =  str AND x >= (21-221.1)/0;
+let Array: [Int ; 2] = {};
+@define Const p : Int =  str[9] * (0);
+let x,y,x : Int = 2221.;
+let x : Bool = True;
+
+
+BeginPg {
+str := {};
+Array := 22.21;
+z :=  y;
+y := z;
+ }
+EndPg;
+
+
+
+
 ErrorToken : a ,
              b
 
@@ -53,3 +78,50 @@ a+b a est non define
 "cc" . 'x'
 
 a AND c >= b
+
+
+
+
+
+
+
+
+
+
+
+
+MainPrgm test;
+{--heeeeeeeeeeeeeeeeeeeeelllllllllloooooo---}
+Var
+let x : Int;
+let z: Float;
+let oop : String = x. "sss" . '\';
+let str : Bool;
+let bo: Bool =  str AND x >= (21-221.1)/0;
+let Array: [Int ; 2] = {};
+let vect: [Int ;3] = {};
+@define Const p : Int =  str[9] * (0);
+let x,y,x : Int = 2221.;
+let x : Bool = True;
+
+
+BeginPg {
+Array := vect;
+str := {};
+Array[0] := Array+2;
+Array := str[2];
+Array := 22.21;
+z :=  y;
+y := z;
+
+if (a) then{
+ if(b+1/2 >2) then{
+ input(a);  
+ }
+elsif(!s) then{
+output("ss");
+}
+}
+
+ }
+EndPg;

@@ -172,6 +172,10 @@ public void Parser(ActionEvent e) {
 	 CommonTokenStream tokens = new CommonTokenStream(lexer);
 	 tokens.fill();
 	 
+	 for(Token tok : tokens.getTokens()) {
+		 System.out.println("token " +tok.getText()+ " "+tok.getChannel());
+	 }
+	 
      ExprParser parser = new  ExprParser(tokens);
      parser.removeErrorListeners();
      
