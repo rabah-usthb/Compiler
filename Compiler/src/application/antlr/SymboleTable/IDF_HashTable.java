@@ -70,7 +70,7 @@ public class IDF_HashTable {
   
   public ErrorToken conditionType(ArrayList<ErrorToken> boolList,ArrayList<ErrorToken> compareList) {
 	  ErrorToken boolType = getType(boolList, 2);
-	  ErrorToken expType = getType(compareList, 0);
+	  ErrorToken expType = getType(compareList, 3);
 	  
 	 
 	  
@@ -90,7 +90,10 @@ public class IDF_HashTable {
   
   public ErrorToken boolType(ArrayList<ErrorToken> boolList) {
 	 
-	  
+	  if(boolList.isEmpty()) {
+		  return new ErrorToken("","BOOL",0,0);
+	  }
+	  else {
 	  for(ErrorToken token : boolList) {
 		  if(!token.type.equalsIgnoreCase("bool")) {
 			  token.type = "EXP";
@@ -98,9 +101,43 @@ public class IDF_HashTable {
 		  }
 		
 	  }
+	  
 	  ErrorToken firstToken = boolList.get(0);
 	  return new ErrorToken(firstToken.name,"BOOL",firstToken.line,firstToken.col);
   }
+  }
+  
+  
+  public ErrorToken comType(ArrayList<ErrorToken> comList) {
+		
+	  if(comList.isEmpty()) {return new ErrorToken("","int",0,0);}
+	  
+	  else {
+	  String cur= "int";
+	  
+	  for(ErrorToken token : comList) {
+		  if(cur.equals("int") && token.type.equalsIgnoreCase("float")) {
+			  cur = token.type;
+		  }
+		  else if(!token.type.equalsIgnoreCase("int") && !token.type.equalsIgnoreCase("float")) {
+			  
+			  if(token.type.equalsIgnoreCase("DIV BY 0")){
+				  cur = token.type;
+			  }else {
+			  
+			   token.type = "EXP";
+			  return token;
+			  }
+		  }
+		
+	  }
+	  
+	  ErrorToken firstToken = comList.get(0);
+	  
+	  return new ErrorToken(firstToken.name,cur,firstToken.line,firstToken.col);
+	  }
+	  }
+  
   
   public ErrorToken AriType(ArrayList<ErrorToken> arithemeticList) {
 	
@@ -181,6 +218,8 @@ public class IDF_HashTable {
 			  return conType(types);
 		  case 2:
 			  return boolType(types);
+		  case 3:
+			  return comType(types);
 		  default:
 			  value = "";
 		  }
@@ -207,7 +246,7 @@ public class IDF_HashTable {
 	  IDF_Attributs att =  this.IDF_Map.get(name);
 	  String size = getSizeArray(name).replace("(", "").replace(")", "");
 	  index = index.replace("(", "").replace(")", "");
-	  ErrorToken er = new ErrorToken(name, col, line);
+	  ErrorToken er = new ErrorToken(name, line, col);
 	  er.index = index;
 	  
 	  if(att.dataType.toString().equalsIgnoreCase("Not Defined")) {
@@ -243,7 +282,7 @@ public class IDF_HashTable {
   public ErrorToken getNormalTypeExpression(String name , int line , int col) {
 	  System.out.println("Name "+name);
 	  IDF_Attributs att =  this.IDF_Map.get(name);
-	  ErrorToken er = new ErrorToken(name, col, line);
+	  ErrorToken er = new ErrorToken(name, line, col);
 	  System.out.println("Name_er "+er.name);
 	  
 	  if(att.dataType.toString().equalsIgnoreCase("Not Defined")) {
@@ -477,7 +516,7 @@ public class IDF_HashTable {
 				 
 			 }
 			 
-			 else if(!att.dataType.toString().split("\n")[0].equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !att.dataType.toString().split("\n")[0].equalsIgnoreCase(typeValue.type)) {
+			 else if((!typeDeclaration.equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !typeDeclaration.equalsIgnoreCase(typeValue.type)) || (typeDeclaration.equalsIgnoreCase("float") && !typeDeclaration.equalsIgnoreCase(typeValue.type)))  {
 				 appendError(att, validateIDF.getMissmatchError(name, line, column));
 				 appendErrorValue(att, "MissMatch ", validateIDF.getSameArray(initValue)); 
 			 }
@@ -604,7 +643,7 @@ public void updateTypeValue(String name , String mutalability,String typeDeclara
 				 appendErrorValue(att, "Div By 0 :", initValue);  
 			 }
 			 
-			 else if(!att.dataType.toString().split("\n")[0].equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !att.dataType.toString().split("\n")[0].equalsIgnoreCase(typeValue.type)) {
+			 else if((!typeDeclaration.equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !typeDeclaration.split("\n")[0].equalsIgnoreCase(typeValue.type)) || (typeDeclaration.equalsIgnoreCase("float") && !typeDeclaration.equalsIgnoreCase(typeValue.type)) ) {
 				System.out.println("Missmatch "+name);
 				System.out.println(att.value.toString());
 				appendError(att, validateIDF.getMissmatchError(name, line, column));
@@ -726,7 +765,7 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 		 
 		 else if (typeValue.type.equalsIgnoreCase("size")) {
 			 appendError(att, validateIDF.getSizeDefError(typeValue.name,typeValue.exp,typeValue.line,typeValue.col));
-			 appendErrorSize(att, "Size Not Defined In : "+validateIDF.getSameArray(Value));
+			 appendErrorValue(att, "Size Not Defined In : ",validateIDF.getSameArray(Value));
 		
 		}
 		
@@ -778,8 +817,8 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 		
 		 }
 		 
-		 else if(!dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase("int") && dataType.equalsIgnoreCase(typeValue.type))  {
-			 
+		 else if((!dataType.equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !dataType.equalsIgnoreCase(typeValue.type)) || (dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase(typeValue.type)) )  {
+							 
 			appendError(att, validateIDF.getMissmatchError(name, line, column));
 			appendErrorValue(att, "MissMatch ", validateIDF.getSameArray(Value));  
 			
@@ -800,10 +839,12 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 		
 		
 		public void affectMONO(String Value,ErrorToken IDF_type, ErrorToken typeValue,int line , int column) {
-			String name = IDF_type.name;
-			String typeIDF = IDF_type.type;
 			
-			String typeAffect = affectNull(typeValue.type);
+			
+			String name = IDF_type.name;
+			
+			String typeIDF = IDF_type.type;
+			String typeAffect = typeValue.type;
 			
 			String indexIDF = affectNull(IDF_type.index);
 			String indexAffect = affectNull(typeValue.index);
@@ -834,7 +875,7 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			System.out.println("VALUE TYPE : "+typeValue.type);
 			System.out.println(IDF_type.type.equalsIgnoreCase("Array"));
 			*/
-			
+			System.out.println("MONOOo  "+name+" "+typeValue.name+" "+typeValue.type +(!typeIDF.equalsIgnoreCase("Array")) +" "+(typeAffect.equalsIgnoreCase("Array")));
 		if(IDF_type.type.equalsIgnoreCase("Not Defined")) {
 			
 			appendError(att, validateIDF.getUndefinedError(name,line, column));
@@ -854,6 +895,12 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 				appendErrorValue(att, "Variable Out Of Bound "+name+"["+indexIDF+"] :", Value);   
 		     
 		 }
+		 else if(typeIDF.equalsIgnoreCase("Not Array")) {
+				
+				appendError(att, validateIDF.getIndexingError(name,indexIDF,line,column));
+				appendErrorValue(att, "Index Non Array "+name+"["+indexIDF+"] :", Value);   
+		     
+		 }
 		 else if(indexIDF == null && indexAffect == null && !typeValue.type.equalsIgnoreCase("size") && !sizeIDF.equalsIgnoreCase("Not Array") && !sizeAffect.equalsIgnoreCase("Not Array") && validateIDF.isAffectSmaller(sizeIDF, sizeAffect)) {
 			 appendError(att, validateIDF.getGreaterArray(name,typeValue.name,line, column));
 			 appendErrorValue(att, "Affect Array Of Greater Size To Array  :",Value);
@@ -861,20 +908,19 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 		 }
 		
 		else  if(indexIDF == null && indexAffect == null && typeIDF.equalsIgnoreCase("Array") && !typeAffect.equalsIgnoreCase(typeIDF)) {
+			System.out.println("NON NON TO YES "+IDF_type.name+" type "+typeIDF);
 			appendError(att, validateIDF.getArrayAffect(name,line, column));
 			appendErrorValue(att, "Affect Non Array To Array "+name+" :",Value);
 			
 		}
-		else  if(indexIDF == null && indexAffect != null && typeIDF.equalsIgnoreCase("Array")) {
-			appendError(att, validateIDF.getArrayAffect(name,line, column));
-			appendErrorValue(att, "Affect Non Array To Array "+name+" :",Value);
-			
-		}
-		else  if(indexIDF != null && indexAffect == null && typeAffect.equalsIgnoreCase("Array")) {
+		
+		else  if(indexAffect == null && !typeIDF.equalsIgnoreCase("Array") &&typeAffect.equalsIgnoreCase("Array")) {
 			appendError(att, validateIDF.getNotArrayAffect(name,line, column));
 			appendErrorValue(att, "Affect Array To Non Array "+name+" :",Value);
 			
 		}
+		
+		
 		
 		
 		
@@ -884,6 +930,7 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			String mapValue = att.value.toString().split("\n")[0];
 			String size = att.size.toString().split("\n")[0];
 			 
+			System.out.println("MONO  "+typeValue.name+" "+typeValue.type +" "+(!dataType.equalsIgnoreCase("float")) +" "+ (!typeValue.type.equalsIgnoreCase("int")) +" "+ (!dataType.equalsIgnoreCase(typeValue.type)) );
 			
 			  if(mul.equalsIgnoreCase("Constant") && !mapValue.equalsIgnoreCase("Not Defined")) {
 				 
@@ -899,7 +946,7 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			
 			 else if (typeAffect.equalsIgnoreCase("size")) {
 				 appendError(att, validateIDF.getsizeError(typeValue.name,typeValue.line,typeValue.col));
-				 appendErrorSize(att, "Size Not Defined For "+name+" : "+Value);
+				 appendErrorValue(att, "Size Not Defined For "+name+" : ",Value);
 			
 			}
 			 
@@ -920,12 +967,6 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			     
 			 }
 			 
-			 else if(typeValue.type.equalsIgnoreCase("EXP")) {
-				 
-					appendError(att, validateIDF.getValueError(Value,typeValue.name,typeValue.line, typeValue.col));
-					appendErrorValue(att, "Not Defined Properly for "+typeValue.name +" in :", Value);   
-			 }
-			 
 			 
 			 else if(typeValue.type.equalsIgnoreCase("Div By 0")) {
 				 
@@ -934,7 +975,7 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			
 			 }
 			 
-			 else if(!dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase("int") && dataType.equalsIgnoreCase(typeValue.type))  {
+			 else if((!dataType.equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !dataType.equalsIgnoreCase(typeValue.type)) || (dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase(typeValue.type)) )  {
 				 
 				appendError(att, validateIDF.getMissmatchError(name, line, column));
 				appendErrorValue(att, "MissMatch ", Value);  
@@ -1005,7 +1046,14 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 				appendErrorValue(att, "Variable Out Of Bound "+name+"["+indexIDF+"] :", Value);   
 		     
 		 }
-		else  if(indexIDF == null) {
+		
+		 else if(typeIDF.equalsIgnoreCase("Not Array")) {
+				
+				appendError(att, validateIDF.getIndexingError(name,indexIDF,line,column));
+				appendErrorValue(att, "Index Non Array "+name+"["+indexIDF+"] :", Value);   
+		     
+		 }
+		else  if(indexIDF == null && IDF_type.type.equalsIgnoreCase("Array")) {
 			appendError(att, validateIDF.getArrayAffect(name,line, column));
 			appendErrorValue(att, "Affect Non Array To Array "+name+" :",Value);
 			
@@ -1025,18 +1073,18 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			  if(mul.equalsIgnoreCase("Constant") && !mapValue.equalsIgnoreCase("Not Defined")) {
 				 
 				appendError(att, validateIDF.getConstantError(name,line, column));
-				appendErrorValue(att, "Constant "+name+" :", validateIDF.getDefaultArray(dataType, size));   
+				appendErrorValue(att, "Constant "+name+" :", Value);   
 		    }
 			 
 			 else if(typeValue.type.equalsIgnoreCase("Not Defined")) {
-					
+					System.out.println("NameVal "+typeValue.name+" "+typeValue.type+" map "+this.IDF_Map.get(typeValue.name).dataType);
 					appendError(att, validateIDF.getUndefinedError(Value, typeValue.name,typeValue.line, typeValue.col));
 					appendErrorValue(att, "Variable "+typeValue.name+" Not Defined in :", Value);    
 			  }
 			
 			 else if (typeValue.type.equalsIgnoreCase("size")) {
 				 appendError(att, validateIDF.getSizeDefError(typeValue.name,Value,typeValue.line,typeValue.col));
-				 appendErrorSize(att, "Size Not Defined In : "+Value);
+				 appendErrorValue(att, "Size Not Defined In : ",Value);
 			
 			}
 			 
@@ -1076,8 +1124,8 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			
 			 }
 			 
-			 else if(!dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase("int") && dataType.equalsIgnoreCase(typeValue.type))  {
-				 
+			 else if((!dataType.equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !dataType.equalsIgnoreCase(typeValue.type)) || (dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase(typeValue.type)) )  {
+						 
 				appendError(att, validateIDF.getMissmatchError(name, line, column));
 				appendErrorValue(att, "MissMatch ", Value);  
 				
@@ -1150,7 +1198,7 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 					
 					 else if (typeValue.type.equalsIgnoreCase("size")) {
 						 appendError(att, validateIDF.getSizeDefError(typeValue.name,Value,typeValue.line,typeValue.col));
-						 appendErrorSize(att, "Size Not Defined In : "+Value);
+						 appendErrorValue(att, "Size Not Defined In : ",Value);
 					
 					}
 					 
@@ -1190,8 +1238,8 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 					
 					 }
 					 
-					 else if(!dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase("int") && dataType.equalsIgnoreCase(typeValue.type))  {
-						 
+					 else if((!dataType.equalsIgnoreCase("float") && !typeValue.type.equalsIgnoreCase("int") && !dataType.equalsIgnoreCase(typeValue.type)) || (dataType.equalsIgnoreCase("float") && !dataType.equalsIgnoreCase(typeValue.type)) )  {
+								 
 						appendError(att, validateIDF.getMissmatchError(name, line, column));
 						appendErrorValue(att, "MissMatch ", Value);  
 						
@@ -1212,7 +1260,44 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 
 				
 		
+	public void updateIndexMulTypeValue(ErrorToken IDF_type , String Value,int line , int column) {
+	 
+	  IDF_Attributs	att = this.IDF_Map.get(IDF_type.name); 
+	  String name = IDF_type.name;
+	  String mul = att.mutalability.toString().split("\n")[0];
 	
+	  String dataType = att.dataType.toString().split("\n")[0];
+	 
+	 
+	   if(IDF_type.type.equalsIgnoreCase("Array")) {
+			appendError(att, validateIDF.getArrayAsIndex(name,line, column));
+			appendErrorValue(att, "Index Is Array "+name+" :",Value);
+			
+		}
+	   
+	   else if(mul.equalsIgnoreCase("Constant")) {
+			 
+			appendError(att, validateIDF.getConstIndex(name,line, column));
+			appendErrorValue(att, "Constant Index "+name+" :",Value );   
+	    }
+	   
+	   else if(!dataType.equalsIgnoreCase("Not Defined") && !dataType.equalsIgnoreCase("INT")) {
+		   appendError(att, validateIDF.getMissIndex(name,line, column));
+		   appendErrorValue(att, "Index Not Int "+name+" :",Value );   
+	   }
+	   
+	   else if(IDF_type.type.equalsIgnoreCase("Not Defined")) {
+		   appendMut(att, "Variable");
+		   appendDataType(att, "Int");
+		   appendValue(att, Value);
+	   }
+	   else { 
+	   appendValue(att, Value);
+	   }
+	   
+	   this.IDF_Map.put(name,att);
+	   
+	}
 	
 
   

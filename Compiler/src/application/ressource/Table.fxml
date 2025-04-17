@@ -44,5 +44,18 @@
                </children></AnchorPane>
         </content>
       </Tab>
+      <Tab text="Exp Table">
+         <content>
+            <AnchorPane fx:id="idfPane1" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                     <content>
+                        <VBox fx:id="ExpBox" alignment="CENTER" />
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
   </tabs>
 </TabPane>

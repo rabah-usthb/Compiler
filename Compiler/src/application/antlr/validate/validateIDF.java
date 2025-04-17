@@ -144,9 +144,10 @@ public class validateIDF {
 		
 		for(ErrorToken token : types) {
 			if(!token.dataType.isEmpty()) {
+			
 			typeSet.add(token.dataType);
-			System.out.println("Data Type "+token.dataType);
 			}
+			System.out.println("Data Type "+token.dataType);
 			
 		}
 		
@@ -213,6 +214,19 @@ public class validateIDF {
 			return true;
 		}
 		
+	}
+	
+	public static String getConstIndex(String token,int line, int col) {
+		return "Error : Trying To Use Constant Index "+token+" At Line "+line+" Column "+col;
+	}
+	
+	
+	public static String getMissIndex(String token,int line, int col) {
+		return "Error : Trying To Use Index "+token+" Of Type Different Than Int At Line "+line+" Column "+col;
+	}
+	
+	public static String getArrayAsIndex(String token,int line, int col) {
+		return "Error : Trying To Use Array "+token+" As For Loop Index At Line "+line+" Column "+col;
 	}
 	
 	public static String getArrayAffect(String token,int line, int col) {

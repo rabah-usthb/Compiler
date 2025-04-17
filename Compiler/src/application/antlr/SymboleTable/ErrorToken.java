@@ -35,6 +35,14 @@ public class ErrorToken {
  }
  
 
+ public ErrorToken (String name, String type ,String dataType, int line , int col) {
+	 this.col = col;
+	 this.line = line;
+	 this.name  = name;
+	
+	 this.dataType = dataType;
+	 this.type =type;
+ }
  
  
  public ErrorToken (String name,int line , int col) {

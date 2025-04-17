@@ -11,6 +11,8 @@ import org.antlr.v4.parse.ANTLRParser.id_return;
 
 import application.antlr.SymboleTable.Constant_Attributs;
 import application.antlr.SymboleTable.Constant_Hashtable;
+import application.antlr.SymboleTable.Expr_Attributs;
+import application.antlr.SymboleTable.Expr_HashTable;
 import application.antlr.SymboleTable.IDF_Attributs;
 import application.antlr.SymboleTable.IDF_HashTable;
 import application.antlr.SymboleTable.Keywords_Attributs;
@@ -32,6 +34,8 @@ public class TableController {
 	VBox keyBox;
 	@FXML
 	VBox idfBox;
+	@FXML
+	VBox ExpBox;
 	
 	
 	public void setIDFTable() {
@@ -158,6 +162,37 @@ public class TableController {
 
 	}
 	
+	
+	public void setExpTable() {
+		TableView<ExpEntry> ExpTable  = new TableView<TableController.ExpEntry>();
+		
+		TableColumn<ExpEntry, String> nameColumn = new TableColumn<TableController.ExpEntry, String>("Name");
+		nameColumn.setCellValueFactory(new PropertyValueFactory<ExpEntry, String>("name"));
+		
+		TableColumn<ExpEntry, String> errorColumn = new TableColumn<TableController.ExpEntry, String>("Type");
+		errorColumn.setCellValueFactory(new PropertyValueFactory<ExpEntry, String>("Error"));
+		
+		ExpTable.getColumns().add(nameColumn);
+		ExpTable.getColumns().add(errorColumn);
+		
+		 for (Map.Entry<String, Expr_Attributs> entry : Expr_HashTable.table.Expr_Map.entrySet()) {
+	         ExpTable.getItems().add(new ExpEntry(entry.getKey(), entry.getValue().error.toString()));
+	     }
+
+		 ExpTable.setPrefHeight(Region.USE_COMPUTED_SIZE);
+		 ExpTable.setPrefWidth(Region.USE_COMPUTED_SIZE);
+		 ExpTable.setMaxHeight(Region.USE_COMPUTED_SIZE);
+		 ExpTable.setMaxWidth(Region.USE_COMPUTED_SIZE);
+		
+		ExpTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
+		ExpTable.setEditable(false);
+		ExpTable.setFocusTraversable(false);
+		
+		ExpBox.getChildren().add(ExpTable);
+		ExpBox.setVgrow(ExpTable, Priority.ALWAYS);
+	
+
+	}
 	@FXML
 	public void initialize() {
 		System.out.println("heee");
@@ -165,6 +200,7 @@ public class TableController {
 		setKeywordTable();
 		setConstantTable();
 		setIDFTable();
+		setExpTable();
 	}
 	
 	public static class KeywordEntry {
@@ -233,6 +269,27 @@ public class TableController {
         
 }
 
+	public static class ExpEntry {
+        public final String name;
+        public final String error;
+
+        public ExpEntry(String name, String error) {
+            this.name = name;
+            this.error = error;
+        }
+        
+        public String getName() {
+        	return this.name;
+        }
+        
+        public String getError() {
+        	return this.error;
+        }
+
+        
+}
+
+	
 	
 
 	public static class ConstEntry {
