@@ -1,11 +1,11 @@
 // Generated from Expr.g4 by ANTLR 4.7.2
 
   package application.antlr;
-  import java.util.HashMap;
-  import java.util.Map;
   import application.antlr.SymboleTable.ErrorToken;
   import application.antlr.SymboleTable.IDF_HashTable;
   import application.antlr.validate.validateIDF;
+  import java.util.List;
+  import java.util.ArrayList;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -354,6 +354,18 @@ public class ExprBaseListener implements ExprListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitSwitchInst(ExprParser.SwitchInstContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCaseValue(ExprParser.CaseValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCaseValue(ExprParser.CaseValueContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

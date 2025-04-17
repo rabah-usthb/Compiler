@@ -1,9 +1,11 @@
-package application.antlr;
-
 // Generated from Expr.g4 by ANTLR 4.7.2
 
+  package application.antlr;
   import java.util.HashMap;
   import java.util.Map;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -292,6 +294,16 @@ public interface ExprListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSwitchInst(ExprParser.SwitchInstContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ExprParser#caseValue}.
+	 * @param ctx the parse tree
+	 */
+	void enterCaseValue(ExprParser.CaseValueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ExprParser#caseValue}.
+	 * @param ctx the parse tree
+	 */
+	void exitCaseValue(ExprParser.CaseValueContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ExprParser#caseInst}.
 	 * @param ctx the parse tree

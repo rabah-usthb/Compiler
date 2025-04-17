@@ -210,8 +210,8 @@ public class IDF_HashTable {
 	  ErrorToken er = new ErrorToken(name, col, line);
 	  er.index = index;
 	  
-	  if(att.dataType.toString().equalsIgnoreCase("Not Define")) {
-		  er.type = "Not Define";
+	  if(att.dataType.toString().equalsIgnoreCase("Not Defined")) {
+		  er.type = "Not Defined";
 	  }
 	  else {
 		  if(!att.size.toString().equalsIgnoreCase("Not Array")) {
@@ -246,8 +246,8 @@ public class IDF_HashTable {
 	  ErrorToken er = new ErrorToken(name, col, line);
 	  System.out.println("Name_er "+er.name);
 	  
-	  if(att.dataType.toString().equalsIgnoreCase("Not Define")) {
-		   er.type = "Not Define";
+	  if(att.dataType.toString().equalsIgnoreCase("Not Defined")) {
+		   er.type = "Not Defined";
 	  }
 	  else {
 		  if(att.size.toString().equalsIgnoreCase("Not Array")) {
@@ -1020,15 +1020,9 @@ IDF_Attributs att =  this.IDF_Map.get(name);
 			String mapValue = att.value.toString().split("\n")[0];
 			String size = att.size.toString().split("\n")[0];
 			
-			 if(size.equalsIgnoreCase("Not Array")) {
-				 System.out.println("AFFECT VALUE NON ARRAY ERROR : "+name+" := "+Value);
-				appendError(att, validateIDF.getNotArrayAffect(name,line, column));
-				appendErrorValue(att, "Affect Array To Non Array "+name+" :", Value);
-				
-			}
 			 
 			
-			 else if(mul.equalsIgnoreCase("Constant") && !mapValue.equalsIgnoreCase("Not Defined")) {
+			  if(mul.equalsIgnoreCase("Constant") && !mapValue.equalsIgnoreCase("Not Defined")) {
 				 
 				appendError(att, validateIDF.getConstantError(name,line, column));
 				appendErrorValue(att, "Constant "+name+" :", validateIDF.getDefaultArray(dataType, size));   

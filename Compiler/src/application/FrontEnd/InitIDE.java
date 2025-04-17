@@ -2,6 +2,7 @@ package application.FrontEnd;
 
 
 import java.io.ByteArrayOutputStream;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -24,13 +25,12 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import application.antlr.ExprLexer;
 import application.antlr.ExprParser;
-import application.antlr.PrintLexerOutput;
 import application.antlr.PrintParserOutput;
+import application.antlr.printLexerConsole;
 import application.antlr.SymboleTable.Constant_Hashtable;
 import application.antlr.SymboleTable.IDF_HashTable;
 import application.antlr.SymboleTable.Keywords_Hashtable;
-import application.antlr.validate.validateConstant;
-import javafx.application.Platform;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -77,7 +77,7 @@ private TextFlow console;
 Button lexer;
 
 private void setSectionTitle(String text) {
-	Text title = new Text(text+"\n\n");
+	Text title = new Text(text+"\n");
 	title.getStyleClass().add("section");
 	console.getChildren().add(title);
 }
@@ -88,9 +88,9 @@ private void setLexicalOutput(ExprLexer lexer) {
 	setSectionTitle("Lexical Analysis: ");
 	lexer.removeErrorListeners();
     
-	PrintLexerOutput printer = new PrintLexerOutput(lexer);
-    printer.printAllToken();
-    String[] lines = printer.output.toString().split("\n");
+	//PrintLexerOutput printer = new PrintLexerOutput(lexer);
+  //  printer.printAllToken();
+    String[] lines = printLexerConsole.console.output.toString().split("\n");
     
     LinkedList<Text> textList = new LinkedList<>();
     
@@ -108,12 +108,12 @@ private void setLexicalOutput(ExprLexer lexer) {
     }
     
     Text text = new Text();
-    if(printer.nb == 0) {
+    if(printLexerConsole.console.nb == 0) {
   	  text.setText("Lexical Analysis Successfull 0 Error Found");
   	  text.getStyleClass().add("suc-text"); 
     }
     else {
-  	  text.setText("Lexical Analysis Not Successfull "+printer.nb+" Error Found");
+  	  text.setText("Lexical Analysis Not Successfull "+printLexerConsole.console.nb+" Error Found");
   	  text.getStyleClass().add("fail-text"); 
     }
     
@@ -123,7 +123,7 @@ private void setLexicalOutput(ExprLexer lexer) {
 }
 
 private void setParserOutput (PrintParserOutput listener){
-	 setSectionTitle("\nSyntatic Analysis: ");
+	 setSectionTitle("\n\nSyntatic Analysis: ");
 	 
 	 String[] listLines = listener.output.toString().split("\n");
 	     
@@ -163,18 +163,11 @@ public void Parser(ActionEvent e) {
 	 console.getChildren().clear();
 	 String input = codeArea.getText();
 	 
-	 ExprLexer lexer_1 = new ExprLexer(CharStreams.fromString(input));
-	 setLexicalOutput(lexer_1);
-     
 	 ExprLexer lexer = new ExprLexer(CharStreams.fromString(input));
-	 lexer.removeErrorListeners();
-	 
 	 CommonTokenStream tokens = new CommonTokenStream(lexer);
 	 tokens.fill();
 	 
-	 for(Token tok : tokens.getTokens()) {
-		 System.out.println("token " +tok.getText()+ " "+tok.getChannel());
-	 }
+	 setLexicalOutput(lexer);
 	 
      ExprParser parser = new  ExprParser(tokens);
      parser.removeErrorListeners();
@@ -197,10 +190,11 @@ public void Lexer(ActionEvent e) {
 	  console.getChildren().clear();
 	  String input = codeArea.getText();
 	  
-	 
 	  
       ExprLexer lexer = new ExprLexer(CharStreams.fromString(input));
-      
+      CommonTokenStream tokens = new CommonTokenStream(lexer);
+ 	  tokens.fill();
+ 	  
       setLexicalOutput(lexer);
       
 }

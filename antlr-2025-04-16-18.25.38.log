@@ -1,0 +1,759 @@
+2025-04-16 18:25:37:262 grammar LogManager.java:25 before: (COMBINED_GRAMMAR Expr (@ header {
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+}) (@ parser members {
+   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+}) (@ lexer members {
+     printLexerConsole.console.nb = 0;
+     printLexerConsole.output.setLength(0);
+
+}) (RULES (RULE SIGN (RULEMODIFIERS fragment) (BLOCK (ALT '-') (ALT '+'))) (RULE LETTER (RULEMODIFIERS fragment) (BLOCK (ALT [a-zA-Z]))) (RULE DIGIT (RULEMODIFIERS fragment) (BLOCK (ALT [0-9]))) (RULE ALPHANUMERICAL (RULEMODIFIERS fragment) (BLOCK (ALT LETTER) (ALT DIGIT))) (RULE INTEGER (RULEMODIFIERS fragment) (BLOCK (ALT (+ (BLOCK (ALT DIGIT)))))) (RULE FLOATED (RULEMODIFIERS fragment) (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) '.' (+ (BLOCK (ALT DIGIT)))) (ALT '.' (+ (BLOCK (ALT DIGIT)))) (ALT (+ (BLOCK (ALT DIGIT))) '.'))) (RULE INLINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '<!-' (* (BLOCK (ALT (~ (SET [\n]))))) '-!>'))) (RULE MULTILINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '{--' (* (BLOCK (ALT .))) '--}'))) (RULE BOOLEANVALUE (BLOCK (ALT (BLOCK (ALT 'True') (ALT 'False')) { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");}))) (RULE INPUT (BLOCK (ALT 'input' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Read Function");}))) (RULE OUTPUT (BLOCK (ALT 'output' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Print Function");}))) (RULE TYPE (BLOCK (ALT (BLOCK (ALT 'Int') (ALT 'Float') (ALT 'Bool') (ALT 'String') (ALT 'Char')) { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");}))) (RULE MAIN (BLOCK (ALT 'MainPrgm' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainProgram Header");}))) (RULE VAR (BLOCK (ALT 'Var' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Block Delimiter");}))) (RULE BEGIN (BLOCK (ALT 'BeginPg' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");}))) (RULE END (BLOCK (ALT 'EndPg' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");}))) (RULE IF (BLOCK (ALT 'if' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"If Keyword");}))) (RULE ELSE (BLOCK (ALT 'else' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else Keyword");}))) (RULE ELSIF (BLOCK (ALT 'elsif' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else If Keyword");}))) (RULE THEN (BLOCK (ALT 'then' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Then Keyword");}))) (RULE SWITCH (BLOCK (ALT 'switch' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Switch Keyword");}))) (RULE CASE (BLOCK (ALT 'case' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");}))) (RULE BREAK (BLOCK (ALT 'break' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");}))) (RULE DEFAULT (BLOCK (ALT 'default' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Default Case Delimiter");}))) (RULE WHILE (BLOCK (ALT 'while' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE DO (BLOCK (ALT 'do' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE FOR (BLOCK (ALT 'for' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE FROM (BLOCK (ALT 'from' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"From Keyword");}))) (RULE TO (BLOCK (ALT 'to' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"To Keyword");}))) (RULE STEP (BLOCK (ALT 'step' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Step Keyword");}))) (RULE AND (BLOCK (ALT 'AND' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical AND");}))) (RULE OR (BLOCK (ALT 'OR' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical OR");}))) (RULE LET (BLOCK (ALT 'let' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Declarator");}))) (RULE DEFINE (BLOCK (ALT '@define' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");}))) (RULE CONST (BLOCK (ALT 'Const' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");}))) (RULE IDF (BLOCK (ALT (+ (BLOCK (ALT LETTER))) (? (BLOCK (ALT (* (BLOCK (ALT ALPHANUMERICAL))) (* (BLOCK (ALT '_' (+ (BLOCK (ALT ALPHANUMERICAL))))))))) {IDF_HashTable.table.insertFirst(getText(),getLine(),getCharPositionInLine());}))) (RULE INT (BLOCK (ALT (BLOCK (ALT '(' SIGN INTEGER ')') (ALT INTEGER)) {printLexerConsole.console.printConstant(getText(),"int",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"int",getLine(),getCharPositionInLine());}))) (RULE FLOAT (BLOCK (ALT (BLOCK (ALT '(' SIGN FLOATED ')') (ALT FLOATED)) {printLexerConsole.console.printConstant(getText(),"float",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"float",getLine(),getCharPositionInLine());}))) (RULE STRING (BLOCK (ALT '"' (* (BLOCK (ALT (~ (SET ["\n]))))) '"' {Constant_Hashtable.ConstantTable.insertTable(getText(),"string",getLine(),getCharPositionInLine());}))) (RULE CHAR (BLOCK (ALT '\'' (* (BLOCK (ALT (~ (SET ['\n]))))) '\'' {Constant_Hashtable.ConstantTable.insertTable(getText(),"char",getLine(),getCharPositionInLine());}))) (RULE CONCAT (BLOCK (ALT '.' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE AFFECT (BLOCK (ALT ':=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE NOT (BLOCK (ALT '!' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE GREATER (BLOCK (ALT '>' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LESSER (BLOCK (ALT '<' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE GEQ (BLOCK (ALT '>=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LEQ (BLOCK (ALT '<=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE EQ (BLOCK (ALT '==' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE NEQ (BLOCK (ALT '!=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LBRACE (BLOCK (ALT '{' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RBRACE (BLOCK (ALT '}' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE PLUS (BLOCK (ALT '+' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE SUB (BLOCK (ALT '-' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE MUL (BLOCK (ALT '*' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE DIV (BLOCK (ALT '/' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COM (BLOCK (ALT ',' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE SEMI (BLOCK (ALT ';' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LBRACKET (BLOCK (ALT '[' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RBRACKET (BLOCK (ALT ']' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LPAR (BLOCK (ALT '(' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RPAR (BLOCK (ALT ')' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE ASSIGN (BLOCK (ALT '=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE TWOPOINT (BLOCK (ALT ':' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COMMENT (BLOCK (LEXER_ALT_ACTION (ALT (BLOCK (ALT MULTILINECOMMENT) (ALT INLINECOMMENT)) {printLexerConsole.console.printToken(getText(),"Comment",getLine(),getCharPositionInLine());}) (LEXER_ACTION_CALL channel HIDDEN)))) (RULE WS (BLOCK (LEXER_ALT_ACTION (ALT (+ (BLOCK (ALT [ \t\r\n])))) skip))) (RULE ERROR_TOKEN (BLOCK (ALT .))) (RULE prog (BLOCK (ALT MAIN IDF ';' varBlock mainCode EOF))) (RULE varBlock (BLOCK (ALT VAR (+ (BLOCK (ALT declaration)))) (ALT VAR))) (RULE declaration (BLOCK (ALT normalDeclaration) (ALT arrayDeclaration))) (RULE listIDF (BLOCK (ALT IDF (* (BLOCK (ALT ',' IDF)))))) (RULE normalDeclaration (@ init {types.clear();}) (BLOCK (ALT declarationKeyword listIDF ':' TYPE '=' value ';' {
+this.types.add($value.type);
+    for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$value.text,types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+}) (ALT declarationKeyword listIDF ':' TYPE ';' {
+        for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+       }))) (RULE number (returns ErrorToken type) (BLOCK (ALT INT { $type = new ErrorToken($INT.text,"INT",$INT.line,$INT.pos); }) (ALT FLOAT { $type = new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos); }))) (RULE arrayDeclaration (@ init {types.clear();}) (BLOCK (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' '}' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}) (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' (+ (BLOCK (ALT listValue))) '}' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,this.types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}) (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}))) (RULE affectArray (BLOCK (ALT '=' '{' (* (BLOCK (ALT listValue))) '}'))) (RULE declarationKeyword (returns String mul) (BLOCK (ALT DEFINE CONST {$mul = "Constant";}) (ALT LET {$mul = "Variable";}))) (RULE listValue (BLOCK (ALT (= v1 value) {ErrorToken type_1 = $v1.type; type_1.exp = $v1.text; this.types.add(type_1); } (* (BLOCK (ALT ',' (= v value) { ErrorToken type_2 = $v.type; type_2.exp = $v.text; this.types.add(type_2);})))))) (RULE value (returns ErrorToken type) (@ init {this.boolList.clear(); this.compareList.clear(); this.concatList.clear(); this.arithmeticList.clear();}) (BLOCK (ALT var {$type= $var.type;}) (ALT number {$type = $number.type;}) (ALT BOOLEANVALUE {$type = new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos);}) (ALT CHAR {$type = new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos); }) (ALT STRING {$type = new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos);}) (ALT condition {$type = IDF_HashTable.table.conditionType(this.boolList,this.compareList);}) (ALT arithmeticExpression {$type=IDF_HashTable.table.getType(this.arithmeticList,0);}) (ALT concatInst {$type=IDF_HashTable.table.getType(this.concatList,1);}))) (RULE mainCode (BLOCK (ALT BEGIN '{' (+ (BLOCK (ALT inst))) '}' END ';') (ALT BEGIN '{' '}' END ';'))) (RULE inst (@ init { this.types.clear();}) (BLOCK (ALT output) (ALT input) (ALT affectInst) (ALT doWhileInst) (ALT whileInst) (ALT ifInst) (ALT switchInst) (ALT forInst))) (RULE input (BLOCK (ALT INPUT '(' listIDF ')' ';'))) (RULE output (BLOCK (ALT OUTPUT '(' content ')' ';'))) (RULE content (BLOCK (ALT (+ (BLOCK (ALT (BLOCK (ALT STRING) (ALT IDF)) ','))) (BLOCK (ALT STRING) (ALT IDF))) (ALT (BLOCK (ALT STRING) (ALT IDF))))) (RULE affectInst (@ init { this.types.clear(); }) (BLOCK (ALT (= var_1 var) AFFECT (= var_2 var) ';' { 
+  IDF_HashTable.table.affectMONO($var_2.text,$var_1.type, $var_2.type,$var_1.start.getLine(),$var_1.start.getCharPositionInLine());
+}) (ALT var AFFECT value ';' {
+ 	IDF_HashTable.table.affectEXP($value.text,$var.type, $value.type,$var.start.getLine(),$var.start.getCharPositionInLine());
+	
+}) (ALT IDF AFFECT '{' (+ (BLOCK (ALT listValue))) '}' ';' {
+  IDF_HashTable.table.affectArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos),this.types, $IDF.line,$IDF.pos);
+}) (ALT IDF AFFECT '{' '}' ';' {
+  IDF_HashTable.table.affectEmptyArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos), $IDF.line,$IDF.pos);
+}))) (RULE concatInst (BLOCK (ALT (BLOCK (ALT STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}) (ALT CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));}) (ALT var {this.concatList.add($var.type);})) (+ (BLOCK (ALT '.' (BLOCK (ALT (BLOCK (ALT var {this.concatList.add($var.type);}) (ALT STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}) (ALT CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));})))))))))) (RULE arithmeticExpression (BLOCK (ALT arithmeticExpression (= op (BLOCK (ALT MUL) (ALT DIV))) (= ari arithmeticExpression) {if($op.type == DIV){ this.arithmeticList.add(validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine()));}}) (ALT arithmeticExpression (BLOCK (ALT PLUS) (ALT SUB)) arithmeticExpression) (ALT operator {this.arithmeticList.add($operator.type);}) (ALT '(' arithmeticExpression ')'))) (RULE operator (returns ErrorToken type) (BLOCK (ALT number {$type = $number.type;}) (ALT var {$type = $var.type;}))) (RULE var (returns ErrorToken type) (BLOCK (ALT IDF {$type = IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos); }) (ALT IDF '[' INT ']' {$type = IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos);}))) (RULE forInst (BLOCK (ALT FOR IDF FROM INT TO INT STEP INT '{' (* (BLOCK (ALT inst))) '}'))) (RULE doWhileInst (BLOCK (ALT DO '{' (* (BLOCK (ALT inst))) '}' WHILE '(' condition ')' ';'))) (RULE whileInst (BLOCK (ALT WHILE '(' condition ')' DO '{' (* (BLOCK (ALT inst))) '}'))) (RULE ifInst (BLOCK (ALT IF LPAR condition RPAR THEN '{' (* (BLOCK (ALT inst))) '}' (? (BLOCK (ALT elseIfInst))) (? (BLOCK (ALT elseInst)))))) (RULE elseIfInst (BLOCK (ALT ELSIF '(' condition ')' THEN '{' (* (BLOCK (ALT inst))) '}' elseIfInst) (ALT ELSIF '(' condition ')' THEN '{' (* (BLOCK (ALT inst))) '}'))) (RULE elseInst (BLOCK (ALT ELSE '{' (* (BLOCK (ALT inst))) '}'))) (RULE switchInst (BLOCK (ALT SWITCH '(' IDF ')' '{' caseInst '}'))) (RULE caseValue (BLOCK (ALT number) (ALT BOOLEANVALUE) (ALT CHAR) (ALT STRING))) (RULE caseInst (BLOCK (ALT CASE caseValue ':' (* (BLOCK (ALT inst))) BREAK ';' defaultInst) (ALT CASE caseValue ':' (+ (BLOCK (ALT inst))) BREAK ';' caseInst))) (RULE defaultInst (BLOCK (ALT DEFAULT ':' (* (BLOCK (ALT inst))) BREAK ';'))) (RULE condition (BLOCK (ALT LPAR condition RPAR) (ALT NOT condition) (ALT condition AND condition) (ALT condition OR condition) (ALT partCondition) (ALT var {this.boolList.add($var.type);}) (ALT BOOLEANVALUE))) (RULE partCondition (BLOCK (ALT arithmeticExpression comparaisonOperator arithmeticExpression {this.compareList.addAll(this.arithmeticList); }))) (RULE comparaisonOperator (BLOCK (ALT EQ) (ALT NEQ) (ALT GREATER) (ALT LESSER) (ALT GEQ) (ALT LEQ)))))
+2025-04-16 18:25:37:298 grammar LogManager.java:25 after: (COMBINED_GRAMMAR Expr (@ header {
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+}) (@ parser members {
+   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+}) (@ lexer members {
+     printLexerConsole.console.nb = 0;
+     printLexerConsole.output.setLength(0);
+
+}) (RULES (RULE SIGN (RULEMODIFIERS fragment) (BLOCK (ALT (SET '-' '+')))) (RULE LETTER (RULEMODIFIERS fragment) (BLOCK (ALT [a-zA-Z]))) (RULE DIGIT (RULEMODIFIERS fragment) (BLOCK (ALT [0-9]))) (RULE ALPHANUMERICAL (RULEMODIFIERS fragment) (BLOCK (ALT LETTER) (ALT DIGIT))) (RULE INTEGER (RULEMODIFIERS fragment) (BLOCK (ALT (+ (BLOCK (ALT DIGIT)))))) (RULE FLOATED (RULEMODIFIERS fragment) (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) '.' (+ (BLOCK (ALT DIGIT)))) (ALT '.' (+ (BLOCK (ALT DIGIT)))) (ALT (+ (BLOCK (ALT DIGIT))) '.'))) (RULE INLINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '<!-' (* (BLOCK (ALT (~ (SET [\n]))))) '-!>'))) (RULE MULTILINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '{--' (* (BLOCK (ALT .))) '--}'))) (RULE BOOLEANVALUE (BLOCK (ALT (BLOCK (ALT 'True') (ALT 'False')) { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");}))) (RULE INPUT (BLOCK (ALT 'input' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Read Function");}))) (RULE OUTPUT (BLOCK (ALT 'output' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Print Function");}))) (RULE TYPE (BLOCK (ALT (BLOCK (ALT 'Int') (ALT 'Float') (ALT 'Bool') (ALT 'String') (ALT 'Char')) { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");}))) (RULE MAIN (BLOCK (ALT 'MainPrgm' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainProgram Header");}))) (RULE VAR (BLOCK (ALT 'Var' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Block Delimiter");}))) (RULE BEGIN (BLOCK (ALT 'BeginPg' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");}))) (RULE END (BLOCK (ALT 'EndPg' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");}))) (RULE IF (BLOCK (ALT 'if' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"If Keyword");}))) (RULE ELSE (BLOCK (ALT 'else' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else Keyword");}))) (RULE ELSIF (BLOCK (ALT 'elsif' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else If Keyword");}))) (RULE THEN (BLOCK (ALT 'then' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Then Keyword");}))) (RULE SWITCH (BLOCK (ALT 'switch' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Switch Keyword");}))) (RULE CASE (BLOCK (ALT 'case' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");}))) (RULE BREAK (BLOCK (ALT 'break' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");}))) (RULE DEFAULT (BLOCK (ALT 'default' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Default Case Delimiter");}))) (RULE WHILE (BLOCK (ALT 'while' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE DO (BLOCK (ALT 'do' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE FOR (BLOCK (ALT 'for' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE FROM (BLOCK (ALT 'from' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"From Keyword");}))) (RULE TO (BLOCK (ALT 'to' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"To Keyword");}))) (RULE STEP (BLOCK (ALT 'step' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Step Keyword");}))) (RULE AND (BLOCK (ALT 'AND' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical AND");}))) (RULE OR (BLOCK (ALT 'OR' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical OR");}))) (RULE LET (BLOCK (ALT 'let' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Declarator");}))) (RULE DEFINE (BLOCK (ALT '@define' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");}))) (RULE CONST (BLOCK (ALT 'Const' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");}))) (RULE IDF (BLOCK (ALT (+ (BLOCK (ALT LETTER))) (? (BLOCK (ALT (* (BLOCK (ALT ALPHANUMERICAL))) (* (BLOCK (ALT '_' (+ (BLOCK (ALT ALPHANUMERICAL))))))))) {IDF_HashTable.table.insertFirst(getText(),getLine(),getCharPositionInLine());}))) (RULE INT (BLOCK (ALT (BLOCK (ALT '(' SIGN INTEGER ')') (ALT INTEGER)) {printLexerConsole.console.printConstant(getText(),"int",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"int",getLine(),getCharPositionInLine());}))) (RULE FLOAT (BLOCK (ALT (BLOCK (ALT '(' SIGN FLOATED ')') (ALT FLOATED)) {printLexerConsole.console.printConstant(getText(),"float",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"float",getLine(),getCharPositionInLine());}))) (RULE STRING (BLOCK (ALT '"' (* (BLOCK (ALT (~ (SET ["\n]))))) '"' {Constant_Hashtable.ConstantTable.insertTable(getText(),"string",getLine(),getCharPositionInLine());}))) (RULE CHAR (BLOCK (ALT '\'' (* (BLOCK (ALT (~ (SET ['\n]))))) '\'' {Constant_Hashtable.ConstantTable.insertTable(getText(),"char",getLine(),getCharPositionInLine());}))) (RULE CONCAT (BLOCK (ALT '.' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE AFFECT (BLOCK (ALT ':=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE NOT (BLOCK (ALT '!' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE GREATER (BLOCK (ALT '>' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LESSER (BLOCK (ALT '<' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE GEQ (BLOCK (ALT '>=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LEQ (BLOCK (ALT '<=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE EQ (BLOCK (ALT '==' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE NEQ (BLOCK (ALT '!=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LBRACE (BLOCK (ALT '{' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RBRACE (BLOCK (ALT '}' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE PLUS (BLOCK (ALT '+' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE SUB (BLOCK (ALT '-' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE MUL (BLOCK (ALT '*' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE DIV (BLOCK (ALT '/' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COM (BLOCK (ALT ',' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE SEMI (BLOCK (ALT ';' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LBRACKET (BLOCK (ALT '[' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RBRACKET (BLOCK (ALT ']' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LPAR (BLOCK (ALT '(' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RPAR (BLOCK (ALT ')' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE ASSIGN (BLOCK (ALT '=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE TWOPOINT (BLOCK (ALT ':' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COMMENT (BLOCK (LEXER_ALT_ACTION (ALT (BLOCK (ALT MULTILINECOMMENT) (ALT INLINECOMMENT)) {printLexerConsole.console.printToken(getText(),"Comment",getLine(),getCharPositionInLine());}) (LEXER_ACTION_CALL channel HIDDEN)))) (RULE WS (BLOCK (LEXER_ALT_ACTION (ALT (+ (BLOCK (ALT [ \t\r\n])))) skip))) (RULE ERROR_TOKEN (BLOCK (ALT .))) (RULE prog (BLOCK (ALT MAIN IDF ';' varBlock mainCode EOF))) (RULE varBlock (BLOCK (ALT VAR (+ (BLOCK (ALT declaration)))) (ALT VAR))) (RULE declaration (BLOCK (ALT normalDeclaration) (ALT arrayDeclaration))) (RULE listIDF (BLOCK (ALT IDF (* (BLOCK (ALT ',' IDF)))))) (RULE normalDeclaration (@ init {types.clear();}) (BLOCK (ALT declarationKeyword listIDF ':' TYPE '=' value ';' {
+this.types.add($value.type);
+    for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$value.text,types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+}) (ALT declarationKeyword listIDF ':' TYPE ';' {
+        for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+       }))) (RULE number (returns ErrorToken type) (BLOCK (ALT INT { $type = new ErrorToken($INT.text,"INT",$INT.line,$INT.pos); }) (ALT FLOAT { $type = new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos); }))) (RULE arrayDeclaration (@ init {types.clear();}) (BLOCK (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' '}' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}) (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' (+ (BLOCK (ALT listValue))) '}' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,this.types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}) (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}))) (RULE affectArray (BLOCK (ALT '=' '{' (* (BLOCK (ALT listValue))) '}'))) (RULE declarationKeyword (returns String mul) (BLOCK (ALT DEFINE CONST {$mul = "Constant";}) (ALT LET {$mul = "Variable";}))) (RULE listValue (BLOCK (ALT (= v1 value) {ErrorToken type_1 = $v1.type; type_1.exp = $v1.text; this.types.add(type_1); } (* (BLOCK (ALT ',' (= v value) { ErrorToken type_2 = $v.type; type_2.exp = $v.text; this.types.add(type_2);})))))) (RULE value (returns ErrorToken type) (@ init {this.boolList.clear(); this.compareList.clear(); this.concatList.clear(); this.arithmeticList.clear();}) (BLOCK (ALT var {$type= $var.type;}) (ALT number {$type = $number.type;}) (ALT BOOLEANVALUE {$type = new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos);}) (ALT CHAR {$type = new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos); }) (ALT STRING {$type = new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos);}) (ALT condition {$type = IDF_HashTable.table.conditionType(this.boolList,this.compareList);}) (ALT arithmeticExpression {$type=IDF_HashTable.table.getType(this.arithmeticList,0);}) (ALT concatInst {$type=IDF_HashTable.table.getType(this.concatList,1);}))) (RULE mainCode (BLOCK (ALT BEGIN '{' (+ (BLOCK (ALT inst))) '}' END ';') (ALT BEGIN '{' '}' END ';'))) (RULE inst (@ init { this.types.clear();}) (BLOCK (ALT output) (ALT input) (ALT affectInst) (ALT doWhileInst) (ALT whileInst) (ALT ifInst) (ALT switchInst) (ALT forInst))) (RULE input (BLOCK (ALT INPUT '(' listIDF ')' ';'))) (RULE output (BLOCK (ALT OUTPUT '(' content ')' ';'))) (RULE content (BLOCK (ALT (+ (BLOCK (ALT (SET STRING IDF) ','))) (SET STRING IDF)) (ALT (SET STRING IDF)))) (RULE affectInst (@ init { this.types.clear(); }) (BLOCK (ALT (= var_1 var) AFFECT (= var_2 var) ';' { 
+  IDF_HashTable.table.affectMONO($var_2.text,$var_1.type, $var_2.type,$var_1.start.getLine(),$var_1.start.getCharPositionInLine());
+}) (ALT var AFFECT value ';' {
+ 	IDF_HashTable.table.affectEXP($value.text,$var.type, $value.type,$var.start.getLine(),$var.start.getCharPositionInLine());
+	
+}) (ALT IDF AFFECT '{' (+ (BLOCK (ALT listValue))) '}' ';' {
+  IDF_HashTable.table.affectArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos),this.types, $IDF.line,$IDF.pos);
+}) (ALT IDF AFFECT '{' '}' ';' {
+  IDF_HashTable.table.affectEmptyArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos), $IDF.line,$IDF.pos);
+}))) (RULE concatInst (BLOCK (ALT (BLOCK (ALT STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}) (ALT CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));}) (ALT var {this.concatList.add($var.type);})) (+ (BLOCK (ALT '.' (BLOCK (ALT (BLOCK (ALT var {this.concatList.add($var.type);}) (ALT STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}) (ALT CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));})))))))))) (RULE arithmeticExpression (BLOCK (ALT arithmeticExpression (= op (SET MUL DIV)) (= ari arithmeticExpression) {if($op.type == DIV){ this.arithmeticList.add(validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine()));}}) (ALT arithmeticExpression (SET PLUS SUB) arithmeticExpression) (ALT operator {this.arithmeticList.add($operator.type);}) (ALT '(' arithmeticExpression ')'))) (RULE operator (returns ErrorToken type) (BLOCK (ALT number {$type = $number.type;}) (ALT var {$type = $var.type;}))) (RULE var (returns ErrorToken type) (BLOCK (ALT IDF {$type = IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos); }) (ALT IDF '[' INT ']' {$type = IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos);}))) (RULE forInst (BLOCK (ALT FOR IDF FROM INT TO INT STEP INT '{' (* (BLOCK (ALT inst))) '}'))) (RULE doWhileInst (BLOCK (ALT DO '{' (* (BLOCK (ALT inst))) '}' WHILE '(' condition ')' ';'))) (RULE whileInst (BLOCK (ALT WHILE '(' condition ')' DO '{' (* (BLOCK (ALT inst))) '}'))) (RULE ifInst (BLOCK (ALT IF LPAR condition RPAR THEN '{' (* (BLOCK (ALT inst))) '}' (? (BLOCK (ALT elseIfInst))) (? (BLOCK (ALT elseInst)))))) (RULE elseIfInst (BLOCK (ALT ELSIF '(' condition ')' THEN '{' (* (BLOCK (ALT inst))) '}' elseIfInst) (ALT ELSIF '(' condition ')' THEN '{' (* (BLOCK (ALT inst))) '}'))) (RULE elseInst (BLOCK (ALT ELSE '{' (* (BLOCK (ALT inst))) '}'))) (RULE switchInst (BLOCK (ALT SWITCH '(' IDF ')' '{' caseInst '}'))) (RULE caseValue (BLOCK (ALT number) (ALT BOOLEANVALUE) (ALT CHAR) (ALT STRING))) (RULE caseInst (BLOCK (ALT CASE caseValue ':' (* (BLOCK (ALT inst))) BREAK ';' defaultInst) (ALT CASE caseValue ':' (+ (BLOCK (ALT inst))) BREAK ';' caseInst))) (RULE defaultInst (BLOCK (ALT DEFAULT ':' (* (BLOCK (ALT inst))) BREAK ';'))) (RULE condition (BLOCK (ALT LPAR condition RPAR) (ALT NOT condition) (ALT condition AND condition) (ALT condition OR condition) (ALT partCondition) (ALT var {this.boolList.add($var.type);}) (ALT BOOLEANVALUE))) (RULE partCondition (BLOCK (ALT arithmeticExpression comparaisonOperator arithmeticExpression {this.compareList.addAll(this.arithmeticList); }))) (RULE comparaisonOperator (BLOCK (ALT (SET EQ NEQ GREATER LESSER GEQ LEQ))))))
+2025-04-16 18:25:37:344 grammar LogManager.java:25 after extract implicit lexer =(COMBINED_GRAMMAR Expr (@ header {
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+}) (@ parser members {
+   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+}) (RULES (RULE prog (BLOCK (ALT MAIN IDF ';' varBlock mainCode EOF))) (RULE varBlock (BLOCK (ALT VAR (+ (BLOCK (ALT declaration)))) (ALT VAR))) (RULE declaration (BLOCK (ALT normalDeclaration) (ALT arrayDeclaration))) (RULE listIDF (BLOCK (ALT IDF (* (BLOCK (ALT ',' IDF)))))) (RULE normalDeclaration (@ init {types.clear();}) (BLOCK (ALT declarationKeyword listIDF ':' TYPE '=' value ';' {
+this.types.add($value.type);
+    for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$value.text,types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+}) (ALT declarationKeyword listIDF ':' TYPE ';' {
+        for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+       }))) (RULE number (returns ErrorToken type) (BLOCK (ALT INT { $type = new ErrorToken($INT.text,"INT",$INT.line,$INT.pos); }) (ALT FLOAT { $type = new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos); }))) (RULE arrayDeclaration (@ init {types.clear();}) (BLOCK (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' '}' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}) (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' '=' '{' (+ (BLOCK (ALT listValue))) '}' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,this.types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}) (ALT declarationKeyword listIDF ':' '[' TYPE ';' INT ']' ';' {
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+}))) (RULE affectArray (BLOCK (ALT '=' '{' (* (BLOCK (ALT listValue))) '}'))) (RULE declarationKeyword (returns String mul) (BLOCK (ALT DEFINE CONST {$mul = "Constant";}) (ALT LET {$mul = "Variable";}))) (RULE listValue (BLOCK (ALT (= v1 value) {ErrorToken type_1 = $v1.type; type_1.exp = $v1.text; this.types.add(type_1); } (* (BLOCK (ALT ',' (= v value) { ErrorToken type_2 = $v.type; type_2.exp = $v.text; this.types.add(type_2);})))))) (RULE value (returns ErrorToken type) (@ init {this.boolList.clear(); this.compareList.clear(); this.concatList.clear(); this.arithmeticList.clear();}) (BLOCK (ALT var {$type= $var.type;}) (ALT number {$type = $number.type;}) (ALT BOOLEANVALUE {$type = new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos);}) (ALT CHAR {$type = new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos); }) (ALT STRING {$type = new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos);}) (ALT condition {$type = IDF_HashTable.table.conditionType(this.boolList,this.compareList);}) (ALT arithmeticExpression {$type=IDF_HashTable.table.getType(this.arithmeticList,0);}) (ALT concatInst {$type=IDF_HashTable.table.getType(this.concatList,1);}))) (RULE mainCode (BLOCK (ALT BEGIN '{' (+ (BLOCK (ALT inst))) '}' END ';') (ALT BEGIN '{' '}' END ';'))) (RULE inst (@ init { this.types.clear();}) (BLOCK (ALT output) (ALT input) (ALT affectInst) (ALT doWhileInst) (ALT whileInst) (ALT ifInst) (ALT switchInst) (ALT forInst))) (RULE input (BLOCK (ALT INPUT '(' listIDF ')' ';'))) (RULE output (BLOCK (ALT OUTPUT '(' content ')' ';'))) (RULE content (BLOCK (ALT (+ (BLOCK (ALT (SET STRING IDF) ','))) (SET STRING IDF)) (ALT (SET STRING IDF)))) (RULE affectInst (@ init { this.types.clear(); }) (BLOCK (ALT (= var_1 var) AFFECT (= var_2 var) ';' { 
+  IDF_HashTable.table.affectMONO($var_2.text,$var_1.type, $var_2.type,$var_1.start.getLine(),$var_1.start.getCharPositionInLine());
+}) (ALT var AFFECT value ';' {
+ 	IDF_HashTable.table.affectEXP($value.text,$var.type, $value.type,$var.start.getLine(),$var.start.getCharPositionInLine());
+	
+}) (ALT IDF AFFECT '{' (+ (BLOCK (ALT listValue))) '}' ';' {
+  IDF_HashTable.table.affectArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos),this.types, $IDF.line,$IDF.pos);
+}) (ALT IDF AFFECT '{' '}' ';' {
+  IDF_HashTable.table.affectEmptyArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos), $IDF.line,$IDF.pos);
+}))) (RULE concatInst (BLOCK (ALT (BLOCK (ALT STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}) (ALT CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));}) (ALT var {this.concatList.add($var.type);})) (+ (BLOCK (ALT '.' (BLOCK (ALT (BLOCK (ALT var {this.concatList.add($var.type);}) (ALT STRING {this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));}) (ALT CHAR {this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));})))))))))) (RULE arithmeticExpression (BLOCK (ALT arithmeticExpression (= op (SET MUL DIV)) (= ari arithmeticExpression) {if($op.type == DIV){ this.arithmeticList.add(validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine()));}}) (ALT arithmeticExpression (SET PLUS SUB) arithmeticExpression) (ALT operator {this.arithmeticList.add($operator.type);}) (ALT '(' arithmeticExpression ')'))) (RULE operator (returns ErrorToken type) (BLOCK (ALT number {$type = $number.type;}) (ALT var {$type = $var.type;}))) (RULE var (returns ErrorToken type) (BLOCK (ALT IDF {$type = IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos); }) (ALT IDF '[' INT ']' {$type = IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos);}))) (RULE forInst (BLOCK (ALT FOR IDF FROM INT TO INT STEP INT '{' (* (BLOCK (ALT inst))) '}'))) (RULE doWhileInst (BLOCK (ALT DO '{' (* (BLOCK (ALT inst))) '}' WHILE '(' condition ')' ';'))) (RULE whileInst (BLOCK (ALT WHILE '(' condition ')' DO '{' (* (BLOCK (ALT inst))) '}'))) (RULE ifInst (BLOCK (ALT IF LPAR condition RPAR THEN '{' (* (BLOCK (ALT inst))) '}' (? (BLOCK (ALT elseIfInst))) (? (BLOCK (ALT elseInst)))))) (RULE elseIfInst (BLOCK (ALT ELSIF '(' condition ')' THEN '{' (* (BLOCK (ALT inst))) '}' elseIfInst) (ALT ELSIF '(' condition ')' THEN '{' (* (BLOCK (ALT inst))) '}'))) (RULE elseInst (BLOCK (ALT ELSE '{' (* (BLOCK (ALT inst))) '}'))) (RULE switchInst (BLOCK (ALT SWITCH '(' IDF ')' '{' caseInst '}'))) (RULE caseValue (BLOCK (ALT number) (ALT BOOLEANVALUE) (ALT CHAR) (ALT STRING))) (RULE caseInst (BLOCK (ALT CASE caseValue ':' (* (BLOCK (ALT inst))) BREAK ';' defaultInst) (ALT CASE caseValue ':' (+ (BLOCK (ALT inst))) BREAK ';' caseInst))) (RULE defaultInst (BLOCK (ALT DEFAULT ':' (* (BLOCK (ALT inst))) BREAK ';'))) (RULE condition (BLOCK (ALT LPAR condition RPAR) (ALT NOT condition) (ALT condition AND condition) (ALT condition OR condition) (ALT partCondition) (ALT var {this.boolList.add($var.type);}) (ALT BOOLEANVALUE))) (RULE partCondition (BLOCK (ALT arithmeticExpression comparaisonOperator arithmeticExpression {this.compareList.addAll(this.arithmeticList); }))) (RULE comparaisonOperator (BLOCK (ALT (SET EQ NEQ GREATER LESSER GEQ LEQ))))))
+2025-04-16 18:25:37:344 grammar LogManager.java:25 lexer =(LEXER_GRAMMAR ExprLexer (@ header {
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+}) (@ parser members {
+   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+}) (@ lexer members {
+     printLexerConsole.console.nb = 0;
+     printLexerConsole.output.setLength(0);
+
+}) (RULES (RULE SIGN (RULEMODIFIERS fragment) (BLOCK (ALT (SET '-' '+')))) (RULE LETTER (RULEMODIFIERS fragment) (BLOCK (ALT [a-zA-Z]))) (RULE DIGIT (RULEMODIFIERS fragment) (BLOCK (ALT [0-9]))) (RULE ALPHANUMERICAL (RULEMODIFIERS fragment) (BLOCK (ALT LETTER) (ALT DIGIT))) (RULE INTEGER (RULEMODIFIERS fragment) (BLOCK (ALT (+ (BLOCK (ALT DIGIT)))))) (RULE FLOATED (RULEMODIFIERS fragment) (BLOCK (ALT (+ (BLOCK (ALT DIGIT))) '.' (+ (BLOCK (ALT DIGIT)))) (ALT '.' (+ (BLOCK (ALT DIGIT)))) (ALT (+ (BLOCK (ALT DIGIT))) '.'))) (RULE INLINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '<!-' (* (BLOCK (ALT (~ (SET [\n]))))) '-!>'))) (RULE MULTILINECOMMENT (RULEMODIFIERS fragment) (BLOCK (ALT '{--' (* (BLOCK (ALT .))) '--}'))) (RULE BOOLEANVALUE (BLOCK (ALT (BLOCK (ALT 'True') (ALT 'False')) { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");}))) (RULE INPUT (BLOCK (ALT 'input' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Read Function");}))) (RULE OUTPUT (BLOCK (ALT 'output' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Print Function");}))) (RULE TYPE (BLOCK (ALT (BLOCK (ALT 'Int') (ALT 'Float') (ALT 'Bool') (ALT 'String') (ALT 'Char')) { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");}))) (RULE MAIN (BLOCK (ALT 'MainPrgm' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainProgram Header");}))) (RULE VAR (BLOCK (ALT 'Var' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Block Delimiter");}))) (RULE BEGIN (BLOCK (ALT 'BeginPg' { printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");}))) (RULE END (BLOCK (ALT 'EndPg' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");}))) (RULE IF (BLOCK (ALT 'if' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"If Keyword");}))) (RULE ELSE (BLOCK (ALT 'else' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else Keyword");}))) (RULE ELSIF (BLOCK (ALT 'elsif' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else If Keyword");}))) (RULE THEN (BLOCK (ALT 'then' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Then Keyword");}))) (RULE SWITCH (BLOCK (ALT 'switch' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Switch Keyword");}))) (RULE CASE (BLOCK (ALT 'case' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");}))) (RULE BREAK (BLOCK (ALT 'break' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");}))) (RULE DEFAULT (BLOCK (ALT 'default' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Default Case Delimiter");}))) (RULE WHILE (BLOCK (ALT 'while' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE DO (BLOCK (ALT 'do' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE FOR (BLOCK (ALT 'for' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");}))) (RULE FROM (BLOCK (ALT 'from' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"From Keyword");}))) (RULE TO (BLOCK (ALT 'to' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"To Keyword");}))) (RULE STEP (BLOCK (ALT 'step' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Step Keyword");}))) (RULE AND (BLOCK (ALT 'AND' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical AND");}))) (RULE OR (BLOCK (ALT 'OR' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical OR");}))) (RULE LET (BLOCK (ALT 'let' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Declarator");}))) (RULE DEFINE (BLOCK (ALT '@define' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");}))) (RULE CONST (BLOCK (ALT 'Const' {printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");}))) (RULE IDF (BLOCK (ALT (+ (BLOCK (ALT LETTER))) (? (BLOCK (ALT (* (BLOCK (ALT ALPHANUMERICAL))) (* (BLOCK (ALT '_' (+ (BLOCK (ALT ALPHANUMERICAL))))))))) {IDF_HashTable.table.insertFirst(getText(),getLine(),getCharPositionInLine());}))) (RULE INT (BLOCK (ALT (BLOCK (ALT '(' SIGN INTEGER ')') (ALT INTEGER)) {printLexerConsole.console.printConstant(getText(),"int",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"int",getLine(),getCharPositionInLine());}))) (RULE FLOAT (BLOCK (ALT (BLOCK (ALT '(' SIGN FLOATED ')') (ALT FLOATED)) {printLexerConsole.console.printConstant(getText(),"float",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"float",getLine(),getCharPositionInLine());}))) (RULE STRING (BLOCK (ALT '"' (* (BLOCK (ALT (~ (SET ["\n]))))) '"' {Constant_Hashtable.ConstantTable.insertTable(getText(),"string",getLine(),getCharPositionInLine());}))) (RULE CHAR (BLOCK (ALT '\'' (* (BLOCK (ALT (~ (SET ['\n]))))) '\'' {Constant_Hashtable.ConstantTable.insertTable(getText(),"char",getLine(),getCharPositionInLine());}))) (RULE CONCAT (BLOCK (ALT '.' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE AFFECT (BLOCK (ALT ':=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE NOT (BLOCK (ALT '!' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE GREATER (BLOCK (ALT '>' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LESSER (BLOCK (ALT '<' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE GEQ (BLOCK (ALT '>=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LEQ (BLOCK (ALT '<=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE EQ (BLOCK (ALT '==' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE NEQ (BLOCK (ALT '!=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LBRACE (BLOCK (ALT '{' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RBRACE (BLOCK (ALT '}' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE PLUS (BLOCK (ALT '+' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE SUB (BLOCK (ALT '-' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE MUL (BLOCK (ALT '*' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE DIV (BLOCK (ALT '/' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COM (BLOCK (ALT ',' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE SEMI (BLOCK (ALT ';' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LBRACKET (BLOCK (ALT '[' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RBRACKET (BLOCK (ALT ']' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE LPAR (BLOCK (ALT '(' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE RPAR (BLOCK (ALT ')' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE ASSIGN (BLOCK (ALT '=' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE TWOPOINT (BLOCK (ALT ':' {printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());}))) (RULE COMMENT (BLOCK (LEXER_ALT_ACTION (ALT (BLOCK (ALT MULTILINECOMMENT) (ALT INLINECOMMENT)) {printLexerConsole.console.printToken(getText(),"Comment",getLine(),getCharPositionInLine());}) (LEXER_ACTION_CALL channel HIDDEN)))) (RULE WS (BLOCK (LEXER_ALT_ACTION (ALT (+ (BLOCK (ALT [ \t\r\n])))) skip))) (RULE ERROR_TOKEN (BLOCK (ALT .)))))
+2025-04-16 18:25:37:566 action-translator LogManager.java:25 translate 
+     printLexerConsole.console.nb = 0;
+     printLexerConsole.output.setLength(0);
+
+
+2025-04-16 18:25:37:567 action-translator LogManager.java:25 translate 
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate  printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Boolean Value");
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate  printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine());  Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Read Function");
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate  printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Print Function");
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate  printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Data Type");
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate  printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainProgram Header");
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate  printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Block Delimiter");
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate  printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");
+2025-04-16 18:25:37:597 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"MainCode Delimiter");
+2025-04-16 18:25:37:598 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"If Keyword");
+2025-04-16 18:25:37:598 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else Keyword");
+2025-04-16 18:25:37:598 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Else If Keyword");
+2025-04-16 18:25:37:600 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Then Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Switch Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Case Delimiter");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Default Case Delimiter");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Loop Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"From Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"To Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Step Keyword");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical AND");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Logical OR");
+2025-04-16 18:25:37:601 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Variable Declarator");
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Keyword",getLine(),getCharPositionInLine()); Keywords_Hashtable.KeywordsTable.insertTable(getText(),"Constant Declarator");
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate IDF_HashTable.table.insertFirst(getText(),getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printConstant(getText(),"int",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"int",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printConstant(getText(),"float",getLine(),getCharPositionInLine()); Constant_Hashtable.ConstantTable.insertTable(getText(),"float",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate Constant_Hashtable.ConstantTable.insertTable(getText(),"string",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate Constant_Hashtable.ConstantTable.insertTable(getText(),"char",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:602 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:603 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:603 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:603 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:603 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:603 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:603 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Separator",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:603 action-translator LogManager.java:25 translate printLexerConsole.console.printToken(getText(),"Comment",getLine(),getCharPositionInLine());
+2025-04-16 18:25:37:719 left-recursion LogManager.java:25 arithmeticExpression
+    :   ( {} operator<tokenIndex=1238> {this.arithmeticList.add($operator.type);} 
+        | '('<tokenIndex=1243> arithmeticExpression<tokenIndex=1245> ')'<tokenIndex=1247> 
+        )
+        (
+          {precpred(_ctx, 4)}?<p=4> op=(MUL<tokenIndex=1210> | DIV<tokenIndex=1214>) ari=arithmeticExpression<tokenIndex=1219,p=5>  {if($op.type == DIV){ this.arithmeticList.add(validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine()));}}
+                  | {precpred(_ctx, 3)}?<p=3> (PLUS<tokenIndex=1228>| SUB<tokenIndex=1231>) arithmeticExpression<tokenIndex=1234,p=4>
+        )*
+    ;
+2025-04-16 18:25:37:726 grammar LogManager.java:25 added: (RULE arithmeticExpression (BLOCK (ALT (BLOCK (ALT {} (operator (ELEMENT_OPTIONS (= tokenIndex 1238))) {this.arithmeticList.add($operator.type);}) (ALT ('(' (ELEMENT_OPTIONS (= tokenIndex 1243))) (arithmeticExpression (ELEMENT_OPTIONS (= tokenIndex 1245))) (')' (ELEMENT_OPTIONS (= tokenIndex 1247))))) (* (BLOCK (ALT ({precpred(_ctx, 4)}? (ELEMENT_OPTIONS (= p 4))) (= op (SET (MUL (ELEMENT_OPTIONS (= tokenIndex 1210))) (DIV (ELEMENT_OPTIONS (= tokenIndex 1214))))) (= ari (arithmeticExpression (ELEMENT_OPTIONS (= tokenIndex 1219) (= p 5)))) {if($op.type == DIV){ this.arithmeticList.add(validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine()));}}) (ALT ({precpred(_ctx, 3)}? (ELEMENT_OPTIONS (= p 3))) (SET (PLUS (ELEMENT_OPTIONS (= tokenIndex 1228))) (SUB (ELEMENT_OPTIONS (= tokenIndex 1231)))) (arithmeticExpression (ELEMENT_OPTIONS (= tokenIndex 1234) (= p 4)))))))))
+2025-04-16 18:25:37:730 left-recursion LogManager.java:25 condition
+    :   ( {} LPAR<tokenIndex=1531> condition<tokenIndex=1533> RPAR<tokenIndex=1535> 
+        | NOT<tokenIndex=1538> condition<tokenIndex=1540,p=6> 
+        | partCondition<tokenIndex=1558> 
+        | var<tokenIndex=1561> {this.boolList.add($var.type);} 
+        | BOOLEANVALUE<tokenIndex=1567> 
+        )
+        (
+          {precpred(_ctx, 5)}?<p=5> AND<tokenIndex=1546> condition<tokenIndex=1548,p=6>
+                  | {precpred(_ctx, 4)}?<p=4> OR<tokenIndex=1553> condition<tokenIndex=1555,p=5>
+        )*
+    ;
+2025-04-16 18:25:37:734 grammar LogManager.java:25 added: (RULE condition (BLOCK (ALT (BLOCK (ALT {} (LPAR (ELEMENT_OPTIONS (= tokenIndex 1531))) (condition (ELEMENT_OPTIONS (= tokenIndex 1533))) (RPAR (ELEMENT_OPTIONS (= tokenIndex 1535)))) (ALT (NOT (ELEMENT_OPTIONS (= tokenIndex 1538))) (condition (ELEMENT_OPTIONS (= tokenIndex 1540) (= p 6)))) (ALT (partCondition (ELEMENT_OPTIONS (= tokenIndex 1558)))) (ALT (var (ELEMENT_OPTIONS (= tokenIndex 1561))) {this.boolList.add($var.type);}) (ALT (BOOLEANVALUE (ELEMENT_OPTIONS (= tokenIndex 1567))))) (* (BLOCK (ALT ({precpred(_ctx, 5)}? (ELEMENT_OPTIONS (= p 5))) (AND (ELEMENT_OPTIONS (= tokenIndex 1546))) (condition (ELEMENT_OPTIONS (= tokenIndex 1548) (= p 6)))) (ALT ({precpred(_ctx, 4)}? (ELEMENT_OPTIONS (= p 4))) (OR (ELEMENT_OPTIONS (= tokenIndex 1553))) (condition (ELEMENT_OPTIONS (= tokenIndex 1555) (= p 5)))))))))
+2025-04-16 18:25:37:739 semantics LogManager.java:25 tokens={EOF=-1, BOOLEANVALUE=1, INPUT=2, OUTPUT=3, TYPE=4, MAIN=5, VAR=6, BEGIN=7, END=8, IF=9, ELSE=10, ELSIF=11, THEN=12, SWITCH=13, CASE=14, BREAK=15, DEFAULT=16, WHILE=17, DO=18, FOR=19, FROM=20, TO=21, STEP=22, AND=23, OR=24, LET=25, DEFINE=26, CONST=27, IDF=28, INT=29, FLOAT=30, STRING=31, CHAR=32, CONCAT=33, AFFECT=34, NOT=35, GREATER=36, LESSER=37, GEQ=38, LEQ=39, EQ=40, NEQ=41, LBRACE=42, RBRACE=43, PLUS=44, SUB=45, MUL=46, DIV=47, COM=48, SEMI=49, LBRACKET=50, RBRACKET=51, LPAR=52, RPAR=53, ASSIGN=54, TWOPOINT=55, COMMENT=56, WS=57, ERROR_TOKEN=58}
+2025-04-16 18:25:37:739 semantics LogManager.java:25 strings={'input'=2, 'output'=3, 'MainPrgm'=5, 'Var'=6, 'BeginPg'=7, 'EndPg'=8, 'if'=9, 'else'=10, 'elsif'=11, 'then'=12, 'switch'=13, 'case'=14, 'break'=15, 'default'=16, 'while'=17, 'do'=18, 'for'=19, 'from'=20, 'to'=21, 'step'=22, 'AND'=23, 'OR'=24, 'let'=25, '@define'=26, 'Const'=27, '.'=33, ':='=34, '!'=35, '>'=36, '<'=37, '>='=38, '<='=39, '=='=40, '!='=41, '{'=42, '}'=43, '+'=44, '-'=45, '*'=46, '/'=47, ','=48, ';'=49, '['=50, ']'=51, '('=52, ')'=53, '='=54, ':'=55}
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 
+DECISION 0 in rule varBlock
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 look=[{25..26}, 7]
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 
+DECISION 1 in rule varBlock
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 look=[6, 6]
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 
+DECISION 2 in rule declaration
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 look=[{25..26}, {25..26}]
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:764 LL1 LogManager.java:25 
+DECISION 3 in rule listIDF
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 look=[48, {53, 55}]
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 
+DECISION 4 in rule normalDeclaration
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 look=[{25..26}, {25..26}]
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 
+DECISION 5 in rule number
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 look=[29, 30]
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 
+DECISION 6 in rule arrayDeclaration
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 look=[{1, 28..32, 35, 52}, 43]
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 
+DECISION 7 in rule arrayDeclaration
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 look=[{25..26}, {25..26}, {25..26}]
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 
+DECISION 8 in rule affectArray
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 look=[{1, 28..32, 35, 52}, 43]
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 
+DECISION 9 in rule declarationKeyword
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 look=[26, 25]
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:765 LL1 LogManager.java:25 
+DECISION 10 in rule listValue
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[48, {1, 28..32, 35, 43, 52}]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 11 in rule value
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[28, {29..30}, 1, 32, 31, {1, 28..30, 35, 52}, {28..30, 52}, {28, 31..32}]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 12 in rule mainCode
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 13 in rule mainCode
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[7, 7]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 14 in rule inst
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[3, 2, 28, 18, 17, 9, 13, 19]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 15 in rule content
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[{28, 31}, {28, 31}]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 16 in rule content
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[{28, 31}, {28, 31}]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 17 in rule affectInst
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 look=[{1, 28..32, 35, 52}, 43]
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:766 LL1 LogManager.java:25 
+DECISION 18 in rule affectInst
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 look=[28, 28, 28, 28]
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 
+DECISION 19 in rule concatInst
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 look=[31, 32, 28]
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 
+DECISION 20 in rule concatInst
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 look=[28, 31, 32]
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 
+DECISION 21 in rule concatInst
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 look=[33, {1, 28..32, 35, 43, 48..49, 52}]
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 
+DECISION 22 in rule arithmeticExpression
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 look=[{28..30}, 52]
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 
+DECISION 23 in rule arithmeticExpression
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 look=[null, null]
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:767 LL1 LogManager.java:25 
+DECISION 24 in rule arithmeticExpression
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 look=[null, null]
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 
+DECISION 25 in rule operator
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 look=[{29..30}, 28]
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 
+DECISION 26 in rule var
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 look=[28, 28]
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 
+DECISION 27 in rule forInst
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 
+DECISION 28 in rule doWhileInst
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 
+DECISION 29 in rule whileInst
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 
+DECISION 30 in rule ifInst
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:768 LL1 LogManager.java:25 
+DECISION 31 in rule ifInst
+2025-04-16 18:25:37:769 LL1 LogManager.java:25 look=[11, {2..3, 9..10, 13, 15, 17..19, 28, 43}]
+2025-04-16 18:25:37:769 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:769 LL1 LogManager.java:25 
+DECISION 32 in rule ifInst
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[10, {2..3, 9, 13, 15, 17..19, 28, 43}]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 33 in rule elseIfInst
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 34 in rule elseIfInst
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 35 in rule elseIfInst
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[11, 11]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 36 in rule elseInst
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 43]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 37 in rule caseValue
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[{29..30}, 1, 32, 31]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 38 in rule caseInst
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 15]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 39 in rule caseInst
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 15]
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:770 LL1 LogManager.java:25 
+DECISION 40 in rule caseInst
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 look=[14, 14]
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 
+DECISION 41 in rule defaultInst
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 look=[{2..3, 9, 13, 17..19, 28}, 15]
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 LL(1)? true
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 
+DECISION 42 in rule condition
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 look=[52, 35, {28..30, 52}, 28, 1]
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 
+DECISION 43 in rule condition
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 look=[null, null]
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 
+DECISION 44 in rule condition
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 look=[null, null]
+2025-04-16 18:25:37:771 LL1 LogManager.java:25 LL(1)? false
+2025-04-16 18:25:37:773 action-translator LogManager.java:25 translate 
+   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+
+2025-04-16 18:25:37:773 action-translator LogManager.java:25 translate 
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+
+2025-04-16 18:25:37:804 action-translator LogManager.java:25 translate types.clear();
+2025-04-16 18:25:37:805 action-translator LogManager.java:25 translate 
+this.types.add($value.type);
+    for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$value.text,types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+
+2025-04-16 18:25:37:805 action-translator LogManager.java:25 qattr [@-1,18:22='value',<0>,119:16].[@-1,24:27='type',<0>,119:22]
+2025-04-16 18:25:37:805 action-translator LogManager.java:25 qattr [@-1,52:58='listIDF',<0>,120:20].[@-1,60:62='ctx',<0>,120:28]
+2025-04-16 18:25:37:807 action-translator LogManager.java:25 qattr [@-1,144:161='declarationKeyword',<0>,121:60].[@-1,163:165='mul',<0>,121:79]
+2025-04-16 18:25:37:807 action-translator LogManager.java:25 qattr [@-1,169:172='TYPE',<0>,121:85].[@-1,174:177='text',<0>,121:90]
+2025-04-16 18:25:37:808 action-translator LogManager.java:25 qattr [@-1,180:184='value',<0>,121:96].[@-1,186:189='text',<0>,121:102]
+2025-04-16 18:25:37:809 action-translator LogManager.java:25 translate 
+        for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+    }
+       
+2025-04-16 18:25:37:809 action-translator LogManager.java:25 qattr [@-1,26:32='listIDF',<0>,127:24].[@-1,34:36='ctx',<0>,127:32]
+2025-04-16 18:25:37:809 action-translator LogManager.java:25 qattr [@-1,113:130='declarationKeyword',<0>,128:55].[@-1,132:134='mul',<0>,128:74]
+2025-04-16 18:25:37:809 action-translator LogManager.java:25 qattr [@-1,138:141='TYPE',<0>,128:80].[@-1,143:146='text',<0>,128:85]
+2025-04-16 18:25:37:810 action-translator LogManager.java:25 translate  $type = new ErrorToken($INT.text,"INT",$INT.line,$INT.pos); 
+2025-04-16 18:25:37:810 action-translator LogManager.java:25 setAttr [@-1,2:5='type',<0>,133:41] [@-1,8:58=' new ErrorToken($INT.text,"INT",$INT.line,$INT.pos)',<0>,133:47]
+2025-04-16 18:25:37:810 action-translator LogManager.java:25 translate  new ErrorToken($INT.text,"INT",$INT.line,$INT.pos)
+2025-04-16 18:25:37:810 action-translator LogManager.java:25 qattr [@-1,17:19='INT',<0>,133:56].[@-1,21:24='text',<0>,133:60]
+2025-04-16 18:25:37:810 action-translator LogManager.java:25 qattr [@-1,33:35='INT',<0>,133:72].[@-1,37:40='line',<0>,133:76]
+2025-04-16 18:25:37:811 action-translator LogManager.java:25 qattr [@-1,43:45='INT',<0>,133:82].[@-1,47:49='pos',<0>,133:86]
+2025-04-16 18:25:37:812 action-translator LogManager.java:25 translate  $type = new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos); 
+2025-04-16 18:25:37:812 action-translator LogManager.java:25 setAttr [@-1,2:5='type',<0>,133:115] [@-1,8:66=' new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos)',<0>,133:121]
+2025-04-16 18:25:37:812 action-translator LogManager.java:25 translate  new ErrorToken($FLOAT.text,"FLOAT",$FLOAT.line,$FLOAT.pos)
+2025-04-16 18:25:37:812 action-translator LogManager.java:25 qattr [@-1,17:21='FLOAT',<0>,133:130].[@-1,23:26='text',<0>,133:136]
+2025-04-16 18:25:37:812 action-translator LogManager.java:25 qattr [@-1,37:41='FLOAT',<0>,133:150].[@-1,43:46='line',<0>,133:156]
+2025-04-16 18:25:37:812 action-translator LogManager.java:25 qattr [@-1,49:53='FLOAT',<0>,133:162].[@-1,55:57='pos',<0>,133:168]
+2025-04-16 18:25:37:815 action-translator LogManager.java:25 translate types.clear();
+2025-04-16 18:25:37:815 action-translator LogManager.java:25 translate 
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+
+2025-04-16 18:25:37:816 action-translator LogManager.java:25 qattr [@-1,20:26='listIDF',<0>,136:18].[@-1,28:30='ctx',<0>,136:26]
+2025-04-16 18:25:37:816 action-translator LogManager.java:25 qattr [@-1,116:133='declarationKeyword',<0>,137:64].[@-1,135:137='mul',<0>,137:83]
+2025-04-16 18:25:37:816 action-translator LogManager.java:25 qattr [@-1,141:144='TYPE',<0>,137:89].[@-1,146:149='text',<0>,137:94]
+2025-04-16 18:25:37:816 action-translator LogManager.java:25 qattr [@-1,152:154='INT',<0>,137:100].[@-1,156:159='text',<0>,137:104]
+2025-04-16 18:25:37:817 action-translator LogManager.java:25 translate 
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeTypeValue(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,this.types,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+
+2025-04-16 18:25:37:817 action-translator LogManager.java:25 qattr [@-1,20:26='listIDF',<0>,142:18].[@-1,28:30='ctx',<0>,142:26]
+2025-04-16 18:25:37:817 action-translator LogManager.java:25 qattr [@-1,116:133='declarationKeyword',<0>,143:64].[@-1,135:137='mul',<0>,143:83]
+2025-04-16 18:25:37:817 action-translator LogManager.java:25 qattr [@-1,141:144='TYPE',<0>,143:89].[@-1,146:149='text',<0>,143:94]
+2025-04-16 18:25:37:817 action-translator LogManager.java:25 qattr [@-1,152:154='INT',<0>,143:100].[@-1,156:159='text',<0>,143:104]
+2025-04-16 18:25:37:818 action-translator LogManager.java:25 translate 
+  for (var idf : $listIDF.ctx.getTokens(IDF)) { 
+        IDF_HashTable.table.updateSizeType(idf.getText(), $declarationKeyword.mul ,$TYPE.text,$INT.text,idf.getSymbol().getLine(),idf.getSymbol().getCharPositionInLine());
+  }
+
+2025-04-16 18:25:37:818 action-translator LogManager.java:25 qattr [@-1,20:26='listIDF',<0>,149:18].[@-1,28:30='ctx',<0>,149:26]
+2025-04-16 18:25:37:818 action-translator LogManager.java:25 qattr [@-1,111:128='declarationKeyword',<0>,150:59].[@-1,130:132='mul',<0>,150:78]
+2025-04-16 18:25:37:818 action-translator LogManager.java:25 qattr [@-1,136:139='TYPE',<0>,150:84].[@-1,141:144='text',<0>,150:89]
+2025-04-16 18:25:37:818 action-translator LogManager.java:25 qattr [@-1,147:149='INT',<0>,150:95].[@-1,151:154='text',<0>,150:99]
+2025-04-16 18:25:37:834 action-translator LogManager.java:25 translate $mul = "Constant";
+2025-04-16 18:25:37:835 action-translator LogManager.java:25 setAttr [@-1,1:3='mul',<0>,155:54] [@-1,6:16=' "Constant"',<0>,155:59]
+2025-04-16 18:25:37:835 action-translator LogManager.java:25 translate  "Constant"
+2025-04-16 18:25:37:835 action-translator LogManager.java:25 translate $mul = "Variable";
+2025-04-16 18:25:37:835 action-translator LogManager.java:25 setAttr [@-1,1:3='mul',<0>,155:81] [@-1,6:16=' "Variable"',<0>,155:86]
+2025-04-16 18:25:37:835 action-translator LogManager.java:25 translate  "Variable"
+2025-04-16 18:25:37:836 action-translator LogManager.java:25 translate ErrorToken type_1 = $v1.type; type_1.exp = $v1.text; this.types.add(type_1); 
+2025-04-16 18:25:37:837 action-translator LogManager.java:25 qattr [@-1,21:22='v1',<0>,156:41].[@-1,24:27='type',<0>,156:44]
+2025-04-16 18:25:37:838 action-translator LogManager.java:25 qattr [@-1,44:45='v1',<0>,156:64].[@-1,47:50='text',<0>,156:67]
+2025-04-16 18:25:37:840 action-translator LogManager.java:25 translate  ErrorToken type_2 = $v.type; type_2.exp = $v.text; this.types.add(type_2);
+2025-04-16 18:25:37:841 action-translator LogManager.java:25 qattr [@-1,22:22='v',<0>,156:136].[@-1,24:27='type',<0>,156:138]
+2025-04-16 18:25:37:842 action-translator LogManager.java:25 qattr [@-1,44:44='v',<0>,156:158].[@-1,46:49='text',<0>,156:160]
+2025-04-16 18:25:37:843 action-translator LogManager.java:25 translate this.boolList.clear(); this.compareList.clear(); this.concatList.clear(); this.arithmeticList.clear();
+2025-04-16 18:25:37:844 action-translator LogManager.java:25 translate $type= $var.type;
+2025-04-16 18:25:37:844 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:150] [@-1,6:15=' $var.type',<0>,157:155]
+2025-04-16 18:25:37:844 action-translator LogManager.java:25 translate  $var.type
+2025-04-16 18:25:37:844 action-translator LogManager.java:25 qattr [@-1,2:4='var',<0>,157:151].[@-1,6:9='type',<0>,157:155]
+2025-04-16 18:25:37:844 action-translator LogManager.java:25 translate $type = $number.type;
+2025-04-16 18:25:37:844 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:178] [@-1,7:19=' $number.type',<0>,157:184]
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 translate  $number.type
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 qattr [@-1,2:7='number',<0>,157:179].[@-1,9:12='type',<0>,157:186]
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 translate $type = new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos);
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:217] [@-1,7:85=' new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos)',<0>,157:223]
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 translate  new ErrorToken($BOOLEANVALUE.text,"BOOL",$BOOLEANVALUE.line,$BOOLEANVALUE.pos)
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 qattr [@-1,17:28='BOOLEANVALUE',<0>,157:233].[@-1,30:33='text',<0>,157:246]
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 qattr [@-1,43:54='BOOLEANVALUE',<0>,157:259].[@-1,56:59='line',<0>,157:272]
+2025-04-16 18:25:37:845 action-translator LogManager.java:25 qattr [@-1,62:73='BOOLEANVALUE',<0>,157:278].[@-1,75:77='pos',<0>,157:291]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 translate $type = new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos); 
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:314] [@-1,7:61=' new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos)',<0>,157:320]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 translate  new ErrorToken($CHAR.text,"CHAR",$CHAR.line,$CHAR.pos)
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 qattr [@-1,17:20='CHAR',<0>,157:330].[@-1,22:25='text',<0>,157:335]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 qattr [@-1,35:38='CHAR',<0>,157:348].[@-1,40:43='line',<0>,157:353]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 qattr [@-1,46:49='CHAR',<0>,157:359].[@-1,51:53='pos',<0>,157:364]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 translate $type = new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos);
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:390] [@-1,7:69=' new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos)',<0>,157:396]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 translate  new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos)
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 qattr [@-1,17:22='STRING',<0>,157:406].[@-1,24:27='text',<0>,157:413]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 qattr [@-1,39:44='STRING',<0>,157:428].[@-1,46:49='line',<0>,157:435]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 qattr [@-1,52:57='STRING',<0>,157:441].[@-1,59:61='pos',<0>,157:448]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 translate $type = IDF_HashTable.table.conditionType(this.boolList,this.compareList);
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:477] [@-1,7:72=' IDF_HashTable.table.conditionType(this.boolList,this.compareList)',<0>,157:483]
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 translate  IDF_HashTable.table.conditionType(this.boolList,this.compareList)
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 translate $type=IDF_HashTable.table.getType(this.arithmeticList,0);
+2025-04-16 18:25:37:846 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:576] [@-1,6:55='IDF_HashTable.table.getType(this.arithmeticList,0)',<0>,157:581]
+2025-04-16 18:25:37:847 action-translator LogManager.java:25 translate IDF_HashTable.table.getType(this.arithmeticList,0)
+2025-04-16 18:25:37:847 action-translator LogManager.java:25 translate $type=IDF_HashTable.table.getType(this.concatList,1);
+2025-04-16 18:25:37:847 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,157:649] [@-1,6:51='IDF_HashTable.table.getType(this.concatList,1)',<0>,157:654]
+2025-04-16 18:25:37:847 action-translator LogManager.java:25 translate IDF_HashTable.table.getType(this.concatList,1)
+2025-04-16 18:25:37:850 action-translator LogManager.java:25 translate  this.types.clear();
+2025-04-16 18:25:37:853 action-translator LogManager.java:25 translate  this.types.clear(); 
+2025-04-16 18:25:37:854 action-translator LogManager.java:25 translate  
+  IDF_HashTable.table.affectMONO($var_2.text,$var_1.type, $var_2.type,$var_1.start.getLine(),$var_1.start.getCharPositionInLine());
+
+2025-04-16 18:25:37:854 action-translator LogManager.java:25 qattr [@-1,37:41='var_2',<0>,166:34].[@-1,43:46='text',<0>,166:40]
+2025-04-16 18:25:37:854 action-translator LogManager.java:25 qattr [@-1,49:53='var_1',<0>,166:46].[@-1,55:58='type',<0>,166:52]
+2025-04-16 18:25:37:854 action-translator LogManager.java:25 qattr [@-1,62:66='var_2',<0>,166:59].[@-1,68:71='type',<0>,166:65]
+2025-04-16 18:25:37:854 action-translator LogManager.java:25 qattr [@-1,74:78='var_1',<0>,166:71].[@-1,80:84='start',<0>,166:77]
+2025-04-16 18:25:37:855 action-translator LogManager.java:25 qattr [@-1,97:101='var_1',<0>,166:94].[@-1,103:107='start',<0>,166:100]
+2025-04-16 18:25:37:855 action-translator LogManager.java:25 translate 
+ 	IDF_HashTable.table.affectEXP($value.text,$var.type, $value.type,$var.start.getLine(),$var.start.getCharPositionInLine());
+	
+
+2025-04-16 18:25:37:855 action-translator LogManager.java:25 qattr [@-1,35:39='value',<0>,170:33].[@-1,41:44='text',<0>,170:39]
+2025-04-16 18:25:37:856 action-translator LogManager.java:25 qattr [@-1,47:49='var',<0>,170:45].[@-1,51:54='type',<0>,170:49]
+2025-04-16 18:25:37:856 action-translator LogManager.java:25 qattr [@-1,58:62='value',<0>,170:56].[@-1,64:67='type',<0>,170:62]
+2025-04-16 18:25:37:856 action-translator LogManager.java:25 qattr [@-1,70:72='var',<0>,170:68].[@-1,74:78='start',<0>,170:72]
+2025-04-16 18:25:37:856 action-translator LogManager.java:25 qattr [@-1,91:93='var',<0>,170:89].[@-1,95:99='start',<0>,170:93]
+2025-04-16 18:25:37:856 action-translator LogManager.java:25 translate 
+  IDF_HashTable.table.affectArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos),this.types, $IDF.line,$IDF.pos);
+
+2025-04-16 18:25:37:856 action-translator LogManager.java:25 qattr [@-1,37:39='IDF',<0>,175:35].[@-1,41:44='text',<0>,175:39]
+2025-04-16 18:25:37:857 action-translator LogManager.java:25 qattr [@-1,91:93='IDF',<0>,175:89].[@-1,95:98='text',<0>,175:93]
+2025-04-16 18:25:37:857 action-translator LogManager.java:25 qattr [@-1,101:103='IDF',<0>,175:99].[@-1,105:108='line',<0>,175:103]
+2025-04-16 18:25:37:857 action-translator LogManager.java:25 qattr [@-1,111:113='IDF',<0>,175:109].[@-1,115:117='pos',<0>,175:113]
+2025-04-16 18:25:37:857 action-translator LogManager.java:25 qattr [@-1,133:135='IDF',<0>,175:131].[@-1,137:140='line',<0>,175:135]
+2025-04-16 18:25:37:857 action-translator LogManager.java:25 qattr [@-1,143:145='IDF',<0>,175:141].[@-1,147:149='pos',<0>,175:145]
+2025-04-16 18:25:37:858 action-translator LogManager.java:25 translate 
+  IDF_HashTable.table.affectEmptyArray($IDF.text,IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos), $IDF.line,$IDF.pos);
+
+2025-04-16 18:25:37:858 action-translator LogManager.java:25 qattr [@-1,42:44='IDF',<0>,179:40].[@-1,46:49='text',<0>,179:44]
+2025-04-16 18:25:37:858 action-translator LogManager.java:25 qattr [@-1,96:98='IDF',<0>,179:94].[@-1,100:103='text',<0>,179:98]
+2025-04-16 18:25:37:858 action-translator LogManager.java:25 qattr [@-1,106:108='IDF',<0>,179:104].[@-1,110:113='line',<0>,179:108]
+2025-04-16 18:25:37:858 action-translator LogManager.java:25 qattr [@-1,116:118='IDF',<0>,179:114].[@-1,120:122='pos',<0>,179:118]
+2025-04-16 18:25:37:858 action-translator LogManager.java:25 qattr [@-1,127:129='IDF',<0>,179:125].[@-1,131:134='line',<0>,179:129]
+2025-04-16 18:25:37:859 action-translator LogManager.java:25 qattr [@-1,137:139='IDF',<0>,179:135].[@-1,141:143='pos',<0>,179:139]
+2025-04-16 18:25:37:860 action-translator LogManager.java:25 translate this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));
+2025-04-16 18:25:37:860 action-translator LogManager.java:25 qattr [@-1,36:41='STRING',<0>,183:57].[@-1,43:46='text',<0>,183:64]
+2025-04-16 18:25:37:861 action-translator LogManager.java:25 qattr [@-1,58:63='STRING',<0>,183:79].[@-1,65:68='line',<0>,183:86]
+2025-04-16 18:25:37:861 action-translator LogManager.java:25 qattr [@-1,71:76='STRING',<0>,183:92].[@-1,78:80='pos',<0>,183:99]
+2025-04-16 18:25:37:861 action-translator LogManager.java:25 translate this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));
+2025-04-16 18:25:37:861 action-translator LogManager.java:25 qattr [@-1,36:39='CHAR',<0>,183:150].[@-1,41:44='text',<0>,183:155]
+2025-04-16 18:25:37:861 action-translator LogManager.java:25 qattr [@-1,56:59='CHAR',<0>,183:170].[@-1,61:64='line',<0>,183:175]
+2025-04-16 18:25:37:861 action-translator LogManager.java:25 qattr [@-1,67:70='CHAR',<0>,183:181].[@-1,72:74='pos',<0>,183:186]
+2025-04-16 18:25:37:862 action-translator LogManager.java:25 translate this.concatList.add($var.type);
+2025-04-16 18:25:37:862 action-translator LogManager.java:25 qattr [@-1,21:23='var',<0>,183:221].[@-1,25:28='type',<0>,183:225]
+2025-04-16 18:25:37:862 action-translator LogManager.java:25 translate this.concatList.add($var.type);
+2025-04-16 18:25:37:862 action-translator LogManager.java:25 qattr [@-1,21:23='var',<0>,183:268].[@-1,25:28='type',<0>,183:272]
+2025-04-16 18:25:37:862 action-translator LogManager.java:25 translate this.concatList.add(new ErrorToken($STRING.text,"STRING",$STRING.line,$STRING.pos));
+2025-04-16 18:25:37:862 action-translator LogManager.java:25 qattr [@-1,36:41='STRING',<0>,183:324].[@-1,43:46='text',<0>,183:331]
+2025-04-16 18:25:37:863 action-translator LogManager.java:25 qattr [@-1,58:63='STRING',<0>,183:346].[@-1,65:68='line',<0>,183:353]
+2025-04-16 18:25:37:863 action-translator LogManager.java:25 qattr [@-1,71:76='STRING',<0>,183:359].[@-1,78:80='pos',<0>,183:366]
+2025-04-16 18:25:37:863 action-translator LogManager.java:25 translate this.concatList.add(new ErrorToken($CHAR.text,"STRING",$CHAR.line,$CHAR.pos));
+2025-04-16 18:25:37:863 action-translator LogManager.java:25 qattr [@-1,36:39='CHAR',<0>,183:415].[@-1,41:44='text',<0>,183:420]
+2025-04-16 18:25:37:863 action-translator LogManager.java:25 qattr [@-1,56:59='CHAR',<0>,183:435].[@-1,61:64='line',<0>,183:440]
+2025-04-16 18:25:37:863 action-translator LogManager.java:25 qattr [@-1,67:70='CHAR',<0>,183:446].[@-1,72:74='pos',<0>,183:451]
+2025-04-16 18:25:37:864 action-translator LogManager.java:25 translate 
+2025-04-16 18:25:37:865 action-translator LogManager.java:25 translate this.arithmeticList.add($operator.type);
+2025-04-16 18:25:37:865 action-translator LogManager.java:25 qattr [@-1,25:32='operator',<0>,2:64].[@-1,34:37='type',<0>,2:73]
+2025-04-16 18:25:37:866 action-translator LogManager.java:25 translate precpred(_ctx, 4)
+2025-04-16 18:25:37:866 action-translator LogManager.java:25 translate if($op.type == DIV){ this.arithmeticList.add(validateIDF.isDividingByZero(this.arithmeticList,$ari.text, $ari.start.getLine(), $ari.start.getCharPositionInLine()));}
+2025-04-16 18:25:37:866 action-translator LogManager.java:25 qattr [@-1,4:5='op',<0>,6:136].[@-1,7:10='type',<0>,6:139]
+2025-04-16 18:25:37:866 action-translator LogManager.java:25 qattr [@-1,95:97='ari',<0>,6:227].[@-1,99:102='text',<0>,6:231]
+2025-04-16 18:25:37:866 action-translator LogManager.java:25 qattr [@-1,106:108='ari',<0>,6:238].[@-1,110:114='start',<0>,6:242]
+2025-04-16 18:25:37:866 action-translator LogManager.java:25 qattr [@-1,128:130='ari',<0>,6:260].[@-1,132:136='start',<0>,6:264]
+2025-04-16 18:25:37:867 action-translator LogManager.java:25 translate precpred(_ctx, 3)
+2025-04-16 18:25:37:867 action-translator LogManager.java:25 translate precpred(_ctx, 4)
+2025-04-16 18:25:37:867 action-translator LogManager.java:25 translate precpred(_ctx, 3)
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 translate $type = $number.type;
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,185:44] [@-1,7:19=' $number.type',<0>,185:50]
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 translate  $number.type
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 qattr [@-1,2:7='number',<0>,185:45].[@-1,9:12='type',<0>,185:52]
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 translate $type = $var.type;
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,185:74] [@-1,7:16=' $var.type',<0>,185:80]
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 translate  $var.type
+2025-04-16 18:25:37:868 action-translator LogManager.java:25 qattr [@-1,2:4='var',<0>,185:75].[@-1,6:9='type',<0>,185:79]
+2025-04-16 18:25:37:869 action-translator LogManager.java:25 translate $type = IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos); 
+2025-04-16 18:25:37:869 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,186:36] [@-1,7:80=' IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos)',<0>,186:42]
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 translate  IDF_HashTable.table.getNormalTypeExpression($IDF.text,$IDF.line,$IDF.pos)
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 qattr [@-1,46:48='IDF',<0>,186:81].[@-1,50:53='text',<0>,186:85]
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 qattr [@-1,56:58='IDF',<0>,186:91].[@-1,60:63='line',<0>,186:95]
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 qattr [@-1,66:68='IDF',<0>,186:101].[@-1,70:72='pos',<0>,186:105]
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 translate $type = IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos);
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 setAttr [@-1,1:4='type',<0>,186:140] [@-1,7:89=' IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos)',<0>,186:146]
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 translate  IDF_HashTable.table.getArrayTypeExpression($IDF.text,$INT.text,$IDF.line,$IDF.pos)
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 qattr [@-1,45:47='IDF',<0>,186:184].[@-1,49:52='text',<0>,186:188]
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 qattr [@-1,55:57='INT',<0>,186:194].[@-1,59:62='text',<0>,186:198]
+2025-04-16 18:25:37:870 action-translator LogManager.java:25 qattr [@-1,65:67='IDF',<0>,186:204].[@-1,69:72='line',<0>,186:208]
+2025-04-16 18:25:37:871 action-translator LogManager.java:25 qattr [@-1,75:77='IDF',<0>,186:214].[@-1,79:81='pos',<0>,186:218]
+2025-04-16 18:25:37:880 action-translator LogManager.java:25 translate 
+2025-04-16 18:25:37:880 action-translator LogManager.java:25 translate this.boolList.add($var.type);
+2025-04-16 18:25:37:880 action-translator LogManager.java:25 qattr [@-1,19:21='var',<0>,5:50].[@-1,23:26='type',<0>,5:54]
+2025-04-16 18:25:37:881 action-translator LogManager.java:25 translate precpred(_ctx, 5)
+2025-04-16 18:25:37:881 action-translator LogManager.java:25 translate precpred(_ctx, 4)
+2025-04-16 18:25:37:881 action-translator LogManager.java:25 translate precpred(_ctx, 5)
+2025-04-16 18:25:37:881 action-translator LogManager.java:25 translate precpred(_ctx, 4)
+2025-04-16 18:25:37:882 action-translator LogManager.java:25 translate this.compareList.addAll(this.arithmeticList); 
+2025-04-16 18:25:37:973 action-translator LogManager.java:25 translate 
+   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+
+2025-04-16 18:25:37:973 action-translator LogManager.java:25 translate 
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+
+2025-04-16 18:25:37:973 action-translator LogManager.java:25 translate 
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+
+2025-04-16 18:25:37:978 action-translator LogManager.java:25 translate 
+   public static final ArrayList<ErrorToken> types  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> arithmeticList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> concatList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> boolList  = new ArrayList<>();
+   public static final ArrayList<ErrorToken> compareList  = new ArrayList<>();
+
+2025-04-16 18:25:37:979 action-translator LogManager.java:25 translate 
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+
+2025-04-16 18:25:37:979 action-translator LogManager.java:25 translate 
+  package application.antlr;
+  import java.util.HashMap;
+  import java.util.Map;
+  import java.util.ArrayList;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.validate.validateIDF;
+  import application.antlr.SymboleTable.Constant_Hashtable;
+  import application.antlr.SymboleTable.ErrorToken;
+  import application.antlr.SymboleTable.IDF_HashTable;
+  import application.antlr.SymboleTable.Keywords_Hashtable;
+  import application.antlr.validate.validateIDF;
+

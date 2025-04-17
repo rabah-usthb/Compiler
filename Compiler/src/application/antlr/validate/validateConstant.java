@@ -115,8 +115,11 @@ public class validateConstant {
 	public static boolean validateFloatToken(String token) {
 		    double value = 0;  	  
 		    
+		    token = token.replace("(", "").replace(")", "");
+		    
 		    try {
-		    value = Double.parseDouble(token.replace("(", "").replace(")", ""));
+		    value = Double.parseDouble(token);
+		    
 		    }
 		    catch(NumberFormatException e) {
 		    	return false;
