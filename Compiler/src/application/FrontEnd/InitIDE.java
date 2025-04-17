@@ -130,7 +130,6 @@ private void setParserOutput (PrintParserOutput listener){
 	     LinkedList<Text> textList = new LinkedList<>();
 	     
 	     for (String line : listLines) {
-	    	 System.out.println(line);
 	    	 Text text = new Text(line+"\n");
 	    	 text.getStyleClass().add("error-text");
 	    	 textList.add(text);

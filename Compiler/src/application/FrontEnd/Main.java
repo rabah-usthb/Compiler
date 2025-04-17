@@ -28,6 +28,7 @@ public class Main extends Application {
             scene.getStylesheets().add(css_tab);
             scene.getStylesheets().add(css_button);
             scene.getStylesheets().add(css_con);
+            primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/application/ressource/ide.png")));
             primaryStage.setScene(scene);
             primaryStage.show();
         } catch (Exception e) {
