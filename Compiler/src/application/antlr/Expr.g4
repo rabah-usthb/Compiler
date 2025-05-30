@@ -109,7 +109,7 @@ TWOPOINT: ':' {printLexerConsole.console.printToken(getText(),"Separator",getLin
 COMMENT: (MULTILINECOMMENT|INLINECOMMENT) {printLexerConsole.console.printToken(getText(),"Comment",getLine(),getCharPositionInLine());} ->channel(HIDDEN) ;
 WS : [ \t\r\n]+ -> skip;
 
-ERROR_TOKEN: .;
+ERROR_TOKEN: . {printLexerConsole.console.printUndefined(getText(),getLine(),getCharPositionInLine());};
 
 
 //Production Rules
@@ -194,9 +194,9 @@ ifInst @init{this.boolList.clear(); this.compareList.clear(); this.arithmeticLis
 elseIfInst @init{this.boolList.clear(); this.compareList.clear(); this.arithmeticList.clear();}:   ELSIF '(' condition ')' {Expr_HashTable.table.updateErrorInsert($condition.text,IDF_HashTable.table.conditionType(this.boolList,this.compareList),$condition.start.getLine(),$condition.start.getCharPositionInLine());} THEN '{' inst* '}' elseIfInst 
 |  ELSIF '(' condition ')' {Expr_HashTable.table.updateErrorInsert($condition.text,IDF_HashTable.table.conditionType(this.boolList,this.compareList),$condition.start.getLine(),$condition.start.getCharPositionInLine());} THEN '{' inst* '}';
 elseInst:   ELSE '{' inst* '}' ;
-switchInst: SWITCH '(' IDF ')' '{' caseInst '}';
+switchInst: SWITCH '(' IDF ')' '{' caseInst* '}';
 caseValue: number|BOOLEANVALUE|CHAR|STRING;
-caseInst: CASE caseValue ':' inst* BREAK ';' defaultInst | CASE caseValue ':' inst+ BREAK ';' caseInst;
+caseInst: CASE (caseValue ':')+ inst* BREAK ';' | (CASE caseValue ':')+ inst* BREAK ';' caseInst | defaultInst;
 defaultInst: DEFAULT ':' inst* BREAK ';';
 condition:   LPAR condition RPAR| NOT condition | condition AND condition| condition OR condition| partCondition| var {this.boolList.add($var.type);} | BOOLEANVALUE ;
 partCondition : {System.out.println("Before COND"+this.arithmeticList);} ari_1=arithmeticExpression  comparaisonOperator  ari_2=arithmeticExpression {System.out.println("COND "+this.arithmeticList+" "+$ari_1.text+" "+$ari_2.text); this.compareList.addAll(this.arithmeticList);};

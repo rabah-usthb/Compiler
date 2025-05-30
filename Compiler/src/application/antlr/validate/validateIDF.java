@@ -21,7 +21,14 @@ public class validateIDF {
 	
 	public static ErrorToken isDividingByZero(ArrayList<ErrorToken> arithmeticList,String operator,int line, int col) {
 		operator = operator.replace("(", "").replace(")", "");
-		if(operator.equals("0") || operator.equals("-0") || operator.equals("+0")) {
+		double val = 0.;
+		try {
+			val = Double.parseDouble(operator);
+		}
+		catch(NumberFormatException e) {
+			return null;
+		}
+		if(val ==0) {
 			arithmeticList.add(new ErrorToken(operator, "DIV BY 0", line, col));
 			return new ErrorToken(operator, "DIV BY 0", line, col);
 		}
@@ -207,11 +214,11 @@ public class validateIDF {
 			return false;
 		}
 		
-		if(value<1 || value>validateConstant.maxInt) {
-			return false;
+		if(value>=1 && value<=validateConstant.maxInt) {
+			return true;
 		}
 		else {
-			return true;
+			return false;
 		}
 		
 	}

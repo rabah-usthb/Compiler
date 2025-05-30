@@ -169,7 +169,7 @@ public class TableController {
 		TableColumn<ExpEntry, String> nameColumn = new TableColumn<TableController.ExpEntry, String>("Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<ExpEntry, String>("name"));
 		
-		TableColumn<ExpEntry, String> errorColumn = new TableColumn<TableController.ExpEntry, String>("Type");
+		TableColumn<ExpEntry, String> errorColumn = new TableColumn<TableController.ExpEntry, String>("Error");
 		errorColumn.setCellValueFactory(new PropertyValueFactory<ExpEntry, String>("Error"));
 		
 		ExpTable.getColumns().add(nameColumn);

@@ -45,7 +45,7 @@ public class printLexerConsole {
       ++nb;
 	}
 	
-	public void printUndefined(String token , String type, int line , int column) {
+	public void printUndefined(String token , int line , int column) {
 		output.append("Undefined Token "+token+" at line " + line + ", column " + column+"\n");
 		++nb;
 	}

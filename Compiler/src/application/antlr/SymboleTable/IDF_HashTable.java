@@ -453,11 +453,14 @@ public class IDF_HashTable {
 	  System.out.println("Div By 0".length());
 	  System.out.println("Equals check: " + typeValue.type.equalsIgnoreCase("Div By 0"));
 	  
+	 System.out.println("NAMEEEEBEFORE : "+name +" defined  "+(att.dataType.toString().equals("Not Defined") && att.mutalability.toString().equals("Not Defined")));
+	  
 	  if(att.dataType.toString().equals("Not Defined") && att.mutalability.toString().equals("Not Defined")) {
 		 
 		 appendMut(att, mutalability);
 		 appendDataType(att, typeDeclaration);
 		 
+		 System.out.println("NAMEEEE : "+name +" SIZE  "+!validateIDF.isSizeCorrect(size));
 		 
 		 if(!validateIDF.isSizeCorrect(size)) {
 			 appendErrorSize(att, "Size Not Defined : "+size);
